@@ -7,7 +7,7 @@ pygame.init()
 
 # Screen dimensions
 WIDTH, HEIGHT = 800, 300
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
+screen = pygame.display.set_mode((WIDTH, HEIGHT),pygame.SCALED)
 pygame.display.set_caption("Game")
 textFont = pygame.font.SysFont(None, 50)
 
@@ -35,8 +35,8 @@ properties = [{
         'cool' : 15,
         'attackX' : [25,45],
         'attackY' : [0,20],
-        'dmg1' : 10,
-        'cool1' : 300,
+        'dmg1' : 8,
+        'cool1' : 200,
         'attackX1' : [20,40],
         'attackY1' : [-20,20],
         'dmg2' : 20,
@@ -97,7 +97,7 @@ properties = [{
         'attackX1' : [10,210],
         'attackY1' : [0,15],
         'dmg2' : 0,
-        'cool2' : 150,
+        'cool2' : 250,
         'attackX2' : [-800,800],
         'attackY2' : [-300,300],
         'attackTime' : [1, 3, 1, 10, 30, 330],
@@ -240,11 +240,13 @@ lightning2 = pygame.Rect(-1,100,40,200)
 hitSound1 = pygame.mixer.Sound('src/sound/punch1.mp3')
 
 def damage(p,d):
-    global p1_health, p2_health, p1_P, p2_P
+    global p1_health, p2_health, p1_P, p2_P, p1_skill2, p2_skill2
     if p == 'p2':
         p2_health -= max(0, d - p2_P['absorb'])
+        p2_skill2 += 5
     elif p == 'p1':
         p1_health -= max(0, d - p1_P['absorb'])
+        p1_skill2 += 5
     hitSound1.play()
 
 def setImg(p,face = None,img = None):
@@ -385,6 +387,7 @@ def update():
                     stun('p2',10)
                 elif p1_P['char'] == 'spear' and 600 - p1_P['attackTime'][4] >= p1_skill2_timer >= 600 - p1_P['attackTime'][5]:
                     p1_skill2 -= 10
+                    p2_skill2 -= 4
                 damage('p2',p1_P['dmg'])
                 p1_skill2 += 10
 
@@ -479,8 +482,10 @@ def update():
             p1_skill2 += 30
             hammer1.x = 765
             setImg('p1',p1_face,p1_image1)
+            p1_skill1 = p1_P['cool1']
         if hammer1.x == 765 or hammer1.x == 0:
             setImg('p1',p1_face,p1_image1)
+            p1_skill1 = p1_P['cool1']
 
     #p1 lightning
     if p1_P['char'] == 'hammer' and 600 - p1_P['attackTime'][5] <= p1_skill2_timer <= 600 - p1_P['attackTime'][4] and p1_skill2_timer % 10 == 0:
@@ -505,6 +510,7 @@ def update():
                     stun('p1',10)
                 elif p2_P['char'] == 'spear' and 600 - p2_P['attackTime'][4] >= p2_skill2_timer >= 600 - p2_P['attackTime'][5]:
                     p2_skill2 -= 10
+                    p1_skill2 -= 4
                 p2_skill2 += 10
 
         elif p2_attack == p2_P['attackTime'][1]:
@@ -596,8 +602,10 @@ def update():
             p2_skill2 += 30
             hammer2.x = 765
             setImg('p2',p2_face,p2_image1)
+            p2_skill1 = p2_P['cool1']
         if hammer2.x == 765 or hammer2.x == 0:
             setImg('p2',p2_face,p2_image1)
+            p2_skill1 = p2_P['cool1']
 
     #p2 lightning
     if p2_P['char'] == 'hammer' and 600 - p2_P['attackTime'][5] <= p2_skill2_timer <= 600 - p2_P['attackTime'][4] and p2_skill2_timer % 10 == 0:
