@@ -268,7 +268,7 @@ def isHit(px,py,ac,ax,ay,af):
     return pygame.Rect(px,py,40,40).colliderect(pygame.Rect(min(ac[0]+af * ax[0], ac[0]+af * ax[1]), ac[1] + ay[0], ax[1] - ax[0], ay[1] - ay[0]))
 
 def stun(p,t):
-    global p1_stun, p2_stun, p1_jump, j2_jump
+    global p1_stun, p2_stun, p1_jump, p2_jump
     if p == 'p1':
         p1_stun = max(p1_stun, t)
         p1_jump = 0
@@ -617,7 +617,7 @@ def update():
         p1.y = min(260 ,p1.y - p1_jump)
         p1_jump -= 1
 
-    if p1_stun == 0:
+    if p2_stun == 0:
         p2.y = min(260,p2.y - p2_jump)
         p2_jump -= 1
 
