@@ -24,622 +24,425 @@ FPS = 60
 
 PLAYER_WIDTH, PLAYER_HEIGHT = 100, 70
 
-# Select Character
-characters = ['fighter','shield','hammer','spear']
-properties = [{
-        'char' : 'fighter',
-        'maxHealth' : 100,
-        'speed' : 5,
-        'absorb' : 0,
-        'dmg' : 3,
-        'cool' : 15,
-        'knockbackPower' : 10,
-        'attackX' : [25,45],
-        'attackY' : [0,20],
-        'dmg1' : 8,
-        'cool1' : 200,
-        'attackX1' : [20,40],
-        'attackY1' : [-20,20],
-        'dmg2' : 20,
-        'cool2' : 200,
-        'attackX2' : [10,45],
-        'attackY2' : [-20,20],
-        'attackTime' : [1, 4, 1, 6, 20, 25],
-},
-{
-        'char' : 'shield',
-        'maxHealth' : 100,
-        'speed' : 5,
-        'absorb' : 1,
-        'dmg' : 3,
-        'cool' : 50,
-        'knockbackPower' : 10,
-        'attackX' : [20,35],
-        'attackY' : [-5,20],
-        'cool1' : 300,
-        'dmg1' : 10,
-        'attackX1' : [-60,60],
-        'attackY1' : [15,20],
-        'dmg2' : 0,
-        'cool2' : 200,
-        'attackX2' : [-800,800],
-        'attackY2' : [-300,300],
-        'attackTime' : [1, 6, 6, 10, 30, 330],
-},
-{
-        'char' : 'hammer',
-        'maxHealth' : 100,
-        'speed' : 3,
-        'absorb' : 0,
-        'dmg' : 5,
-        'cool' : 50,
-        'knockbackPower' : 10,
-        'attackX' : [20,35],
-        'attackY' : [-20,15],
-        'cool1' : 300,
-        'dmg1' : 0,
-        'attackX1' : [-800,800],
-        'attackY1' : [-300,300],
-        'dmg2' : 0,
-        'cool2' : 150,
-        'attackX2' : [-800,800],
-        'attackY2' : [-300,300],
-        'attackTime' : [20, 30, 30, 180, 30, 150],
-},
-{
-        'char' : 'spear',
-        'maxHealth' : 100,
-        'speed' : 5,
-        'absorb' : 0,
-        'dmg' : 2,
-        'cool' : 20,
-        'knockbackPower' : 10,
-        'attackX' : [20,70],
-        'attackY' : [0,15],
-        'cool1' : 100,
-        'dmg1' : 3,
-        'attackX1' : [10,210],
-        'attackY1' : [0,15],
-        'dmg2' : 0,
-        'cool2' : 250,
-        'attackX2' : [-800,800],
-        'attackY2' : [-300,300],
-        'attackTime' : [1, 3, 1, 10, 30, 330],
-}]
-imgs = []
+class Player():
+    def __init__(self, char, player):
+        if char == 'fighter':
+            self.char = 'fighter'
+            self.maxHealth = 100
+            self.speed = 5
+            self.jumpPower = 15
+            self.absorb = 0
+            self.dmg = 3
+            self.cool = 15
+            self.knockbackPower = 10
+            self.attackX = [25,45]
+            self.attackY = [0,20]
+            self.dmg1 = 8
+            self.cool1 = 200
+            self.attackX1 = [20,40]
+            self.attackY1 = [-20,20]
+            self.dmg2 = 20
+            self.cool2 = 200
+            self.attackX2 = [10,45]
+            self.attackY2 = [-20,20]
+            self.attackTime = [1, 4, 1, 6, 20, 25]
+        elif char == 'shield':
+            self.char = 'shield'
+            self.maxHealth = 100
+            self.speed = 5
+            self.jumpPower = 15
+            self.absorb = 1
+            self.dmg = 3
+            self.cool = 40
+            self.knockbackPower = 10
+            self.attackX = [20,35]
+            self.attackY = [-5,20]
+            self.dmg1 = 10
+            self.cool1 = 300
+            self.attackX1 = [-60,60]
+            self.attackY1 = [15,20]
+            self.dmg2 = 0
+            self.cool2 = 200
+            self.attackX2 = [-800,800]
+            self.attackY2 = [-300,300]
+            self.attackTime = [1, 6, 6, 10, 30, 330]
+        elif char == 'hammer':
+            self.char = 'hammer'
+            self.maxHealth = 100
+            self.speed = 3
+            self.jumpPower = 15
+            self.absorb = 0
+            self.dmg = 5
+            self.cool = 50
+            self.knockbackPower = 10
+            self.attackX = [20,35]
+            self.attackY = [-20,15]
+            self.dmg1 = 0
+            self.cool1 = 300
+            self.attackX1 = [-800,800]
+            self.attackY1 = [-300,300]
+            self.dmg2 = 0
+            self.cool2 = 150
+            self.attackX2 = [-800,800]
+            self.attackY2 = [-300,300]
+            self.attackTime = [20, 30, 30, 180, 30, 150]
+        elif char == 'spear':
+            self.char = 'spear'
+            self.maxHealth = 100
+            self.speed = 5
+            self.jumpPower = 15
+            self.absorb = 0
+            self.dmg = 2
+            self.cool = 20
+            self.knockbackPower = 10
+            self.attackX = [20,70]
+            self.attackY = [0,15]
+            self.cool1 = 100
+            self.dmg1 = 3
+            self.attackX1 = [10,210]
+            self.attackY1 = [0,15]
+            self.dmg2 = 0
+            self.cool2 = 250
+            self.attackX2 = [-800,800]
+            self.attackY2 = [-300,300]
+            self.attackTime = [1, 3, 1, 10, 30, 330]
 
-for i,char in enumerate(characters):
-    image = pygame.image.load(f"src/characters/{char}/{char}.png")
-    image = pygame.transform.scale(image, (100, 100))
-    imgs.append(image)
+        self.rect = pygame.Rect(100 if player == 1 else 660, HEIGHT - PLAYER_HEIGHT + 30, 40, 40)
+        self.player = player
+        self.health = self.maxHealth
+        self.face = 1 if player == 1 else -1
+        self.attack = self.cool
+        self.skill1 = self.cool1
+        self.skill2 = 0
+        self.skill2_timer = 0
+        self.jump = 0
+        self.stun = 0
+        self.knockback = 0
 
-p1,p2 = 0,0
-p1_delay = 0
-p2_delay = 0
-p1_selected = False
-p2_selected = False
+        self.Imgs = [None] * 8
+        for i in range(7):
+            self.Imgs[i] = pygame.image.load(f"src/characters/{self.char}/{self.char}{i+1}.png")
+            self.Imgs[i] = pygame.transform.scale(self.Imgs[i], (PLAYER_WIDTH, PLAYER_HEIGHT))
+        self.currentImg = self.Imgs[0]
 
-running = True
-while running:
-    p1_delay -= 1
-    p2_delay -= 1
-    clock.tick(FPS)
+        if self.char == 'shield':
+            shieldImg = pygame.image.load("src/effects/shield.png")
+            self.shieldImg = pygame.transform.scale(shieldImg, (40,40))
+        if self.char == 'spear':
+            speedImg = pygame.image.load("src/effects/attackSpeed.png")
+            self.speedImg = pygame.transform.scale(speedImg, (40,40))
+        if self.char == 'hammer':
+            hammerImg = pygame.image.load("src/characters/hammer/flying_hammer.png")
+            self.hammerImg = pygame.transform.scale(hammerImg, (35,35))
+            lightningImg = pygame.image.load("src/characters/hammer/lightning1.png")
+            self.lightningImg = pygame.transform.scale(lightningImg, (40,200))
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-            
-    
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_a] and p1 > 0 and p1_delay <= 0 and not p1_selected:
-        p1 -= 1
-        p1_delay = 10
-    elif keys[pygame.K_d] and p1 < len(imgs)-1 and p1_delay <= 0 and not p1_selected:
-        p1 += 1
-        p1_delay = 10
-    if keys[pygame.K_LEFT] and p2 > 0 and p2_delay <= 0 and not p2_selected:
-        p2 -= 1
-        p2_delay = 10
-    elif keys[pygame.K_RIGHT] and p2 < len(imgs)-1 and p2_delay <= 0 and not p2_selected:
-        p2 += 1
-        p2_delay = 10
-    if keys[pygame.K_e]:
-        p1_selected = True
-    if keys[pygame.K_SLASH]:
-        p2_selected = True
-    if keys[pygame.K_r]:
-        p1_selected = False
-    if keys[pygame.K_PERIOD]:
-        p2_selected = False
+            self.hammer = pygame.Rect(765,0,35,35)
+            self.hammerFace = 1
+            self.lightning = pygame.Rect(-1,100,40,200)
 
-    screen.fill(WHITE)
-    for i,img in enumerate(imgs):
-        screen.blit(img,(10 + 110 * i, 15))
-    pygame.draw.rect(screen, GREEN if p1_selected else BLUE, (10 + p1 * 110, 15, 100, 100), 4)
-    pygame.draw.rect(screen, GREEN if p2_selected else RED, (14 + p2 * 110, 19, 92, 92), 4)
+        self.hitSound = pygame.mixer.Sound('src/sound/punch1.mp3')
 
-    pygame.display.flip()
+    def damage(self,damage):
+        self.health -= max(0, damage - self.absorb)
+        self.skill2 += 5
+        self.hitSound.play()
 
-    if p1_selected and p2_selected:
-        break
-    
-# Initialize player 1
-p1 = properties[p1].copy()
-p1['rect'] = pygame.Rect(100, HEIGHT - PLAYER_HEIGHT + 30, 40, 40)
-
-p1['health'] = p1['maxHealth']
-p1['face'] = 1
-p1['attack'] = p1['cool']
-p1['skill1'] = p1['cool1']
-p1['skill2'] = 0
-p1['skill2_timer'] = 0
-p1['jump'] = 0
-p1['stun'] = 0
-p1['knockback'] = 0
-
-# Initialize player 2
-p2 = properties[p2].copy()
-p2['rect'] = pygame.Rect(WIDTH - 140, HEIGHT - PLAYER_HEIGHT + 30, 40, 40)
-
-p2['health'] = p2['maxHealth']
-p2['face'] = -1
-p2['attack'] = p2['cool']
-p2['skill1'] = p2['cool1']
-p2['skill2'] = 0
-p2['skill2_timer'] = 0
-p2['jump'] = 0
-p2['stun'] = 0
-p2['knockback'] = 0
-
-# Load player images
-p1_imgs = [None] * 8
-for i in range(7):
-    p1_imgs[i] = pygame.image.load(f"src/characters/{p1['char']}/{p1['char']}{i+1}.png")
-    p1_imgs[i] = pygame.transform.scale(p1_imgs[i], (PLAYER_WIDTH, PLAYER_HEIGHT))
-
-p1['image'] = p1_imgs[0]
-
-
-p2_imgs = [None] * 8
-for i in range(7):
-    p2_imgs[i] = pygame.image.load(f"src/characters/{p2['char']}/{p2['char']}{i+1}.png")
-    p2_imgs[i] = pygame.transform.scale(p2_imgs[i], (PLAYER_WIDTH, PLAYER_HEIGHT))
-    p2_imgs[i] = pygame.transform.flip(p2_imgs[i],True,False)
-
-p2['image'] = p2_imgs[0]
-
-if p1['char'] == 'shield' or p2['char'] == 'shield':
-    shieldImg = pygame.image.load("src/effects/shield.png")
-    shieldImg = pygame.transform.scale(shieldImg, (40,40))
-if p1['char'] == 'spear' or p2['char'] == 'spear':
-    speedImg = pygame.image.load("src/effects/attackSpeed.png")
-    speedImg = pygame.transform.scale(speedImg, (40,40))
-if p1['char'] == 'hammer':
-    p1['hammerImg'] = pygame.image.load("src/characters/hammer/flying_hammer.png")
-    p1['hammerImg'] = pygame.transform.scale(p1['hammerImg'], (35,35))
-    lightningImg = pygame.image.load("src/characters/hammer/lightning1.png")
-    lightningImg = pygame.transform.scale(lightningImg, (40,200))
-
-    p1['hammer'] = pygame.Rect(765,0,35,35)
-    p1['hammerFace'] = 1
-    p1['lightning'] = pygame.Rect(-1,100,40,200)
-if p2['char'] == 'hammer':
-    p2['hammerImg'] = pygame.image.load("src/characters/hammer/flying_hammer.png")
-    p2['hammerImg'] = pygame.transform.scale(p2['hammerImg'], (35,35))
-    lightningImg = pygame.image.load("src/characters/hammer/lightning1.png")
-    lightningImg = pygame.transform.scale(lightningImg, (40,200))
-
-    p2['hammer'] = pygame.Rect(765,0,35,35)
-    p2['hammerFace'] = 1
-    p2['lightning'] = pygame.Rect(-1,100,40,200)
-
-lightning1 = pygame.Rect(-1,100,40,200)
-lightning2 = pygame.Rect(-1,100,40,200)
-
-hitSound1 = pygame.mixer.Sound('src/sound/punch1.mp3')
-
-def damage(p,damage):
-    global p1, p2
-    if p == 'p2':
-        p2['health'] -= max(0, damage - p2['absorb'])
-        p2['skill2'] += 5
-    elif p == 'p1':
-        p1['health'] -= max(0, damage - p1['absorb'])
-        p1['skill2'] += 5
-    hitSound1.play()
-
-def setImg(p,face = None,img = None):
-    global p1,p2
-    if p == 'p1':
-        if img:
-            if face == -1: img = pygame.transform.flip(img, True, False)
-            p1['image'] = img
+    def setImg(self,imgNum = None,face = None):
+        if imgNum != None:
+            img = self.Imgs[imgNum]
+            if face: self.face = face
+            if self.face == -1: img = pygame.transform.flip(img,True,False)
+            self.currentImg = img
         else:
-            p1['image'] = pygame.transform.flip(p1['image'], True, False)
-    elif p == 'p2':
-        if img: 
-            if face == 1: img = pygame.transform.flip(img, True, False)
-            p2['image'] = img
-        else:
-            p2['image'] = pygame.transform.flip(p2['image'], True, False)
+            self.face = -self.face
+            self.currentImg = pygame.transform.flip(self.currentImg,True,False)
 
-def isHit(px,py,ac,ax,ay,af):
-    return pygame.Rect(px,py,40,40).colliderect(pygame.Rect(min(ac[0]+af * ax[0], ac[0]+af * ax[1]), ac[1] + ay[0], ax[1] - ax[0], ay[1] - ay[0]))
+    def isHit(self,opponent,attackX,attackY,attackCenter = None):
+        if not attackCenter: attackCenter = self.rect.center
+        attack = pygame.Rect(attackCenter[0] + min(self.face * attackX[0],self.face * attackX[1]), attackCenter[1] + attackY[0], attackX[1] - attackX[0], attackY[1] - attackY[0])
+        # pygame.draw.rect(screen,RED,attack)
+        # pygame.display.flip()
+        return opponent.rect.colliderect(attack)
 
-def stun(p,t):
-    global p1, p2
-    if p == 'p1':
-        p1['stun'] = max(p1['stun'], t)
-        p1['jump'] = 0
-    elif p == 'p2':
-        p2['stun'] = max(p2['stun'], t)
-        p2['jump'] = 0
 
-def jump(p,n):
-    global p1, p2
-    if p == 'p1':
-        p1['jump'] = max(n, p1['jump'] + n)
-    elif p == 'p2':
-        p2['jump'] = max(n, p2['jump'] + n)
-
-def knockback(p,d): # 미구현
-    global p1, p2
-    if p == 'p1':
-        p1['knockback'] += d * p1['knockbackPower']
-    elif p == 'p2':
-        p2['knockback'] += d * p2['knockbackPower']
-
-# def handleCharacterAttack(character, opponent):
-#     if character == 'fighter':
-#         pass
-#     elif character == 'shield':
-#         pass
-#     elif character == 'hammer':
-#         pass
-#     elif character == 'spear':
+    def addStun(self,time):
+        self.stun = max(self.stun, time)
+        self.jump = 0
     
+    def addJump(self,n = 0):
+        if n == 0: n = self.jumpPower
+        self.jump = max(n, self.jump + n)
+
+    def knockback(self,opponent,face): # 미구현
+        self.knockback += face * opponent.knockbackPower
+
+
+    def moveX(self,face,n = 0):
+        if n == 0: n = self.speed
+        if self.face != face:
+            self.setImg()
+            self.face = face
+        self.rect.x = max(0,self.rect.x - n) if face == -1 else min(WIDTH - 40, self.rect.x + n)
+    
+    def move(self):
+        keys = pygame.key.get_pressed()
+
+        if self.player == 1:
+            keyset = [pygame.K_a,pygame.K_d,pygame.K_w,pygame.K_e,pygame.K_r,pygame.K_t]
+        else:
+            keyset = [pygame.K_LEFT,pygame.K_RIGHT,pygame.K_UP,pygame.K_SLASH,pygame.K_PERIOD,pygame.K_COMMA]
+        
+        if self.stun <= 0:
+            if keys[keyset[0]] and self.rect.left > 0:
+                self.moveX(-1)
+            if keys[keyset[1]] and self.rect.right < WIDTH:
+                self.moveX(1)
+            if keys[keyset[2]] and self.rect.y == 260:
+                self.addJump()
+            if keys[keyset[3]] and self.attack >= self.cool and not(self.char == 'hammer' and 0 < self.hammer.x < 765):
+                self.attack = 0
+            if keys[keyset[4]] and self.skill1 >= self.cool1:
+                self.skill1 = 0
+            if keys[keyset[5]] and self.skill2 >= self.cool2 and not(self.char == 'hammer' and 0 < self.hammer.x < 765):
+                self.skill2 = 0
+                self.skill2_timer = 600
+
+    def hammerHandler(self,opponent):
+        if self.char == 'hammer' and self.attackTime[2]+1 <= self.skill1 <= self.attackTime[3] and self.skill1 % 3 == 0 and 0 < self.hammer.x < 765:
+            self.hammerImg = pygame.transform.rotate(self.hammerImg,self.hammerFace * 90.0)
+            self.hammer.x = min(self.hammer.x + self.hammerFace * 15, 765) if self.hammerFace == 1 else max(self.hammer.x + self.hammerFace * 15, 0)
+            if self.isHit(opponent,(-17,17),(-17,17),self.hammer.center):
+                opponent.damage(10)
+                self.skill2 += 30
+                self.hammer.x = 765
+                self.setImg(0)
+                self.skill1 = self.cool1
+            elif self.hammer.x == 765 or self.hammer.x == 0:
+                self.setImg(0)
+                self.skill1 = self.cool1
+            else:
+                self.setImg(4)
+
+        if self.char == 'hammer' and 600 - self.attackTime[5] <= self.skill2_timer <= 600 - self.attackTime[4] and self.skill2_timer % 10 == 0:
+            self.lightning[0] = random.random() * 400 + self.rect.center[0] - 200
+            if self.isHit(opponent,(-20,20),(-100,100),self.lightning.center):
+                opponent.damage(15) 
+
+    def attackHandler(self,opponent):
+        if self.attack == 0: 
+            self.setImg(1)
+        elif self.attack == self.attackTime[0]:
+            self.setImg(2)
+
+            if self.isHit(opponent,self.attackX,self.attackY):
+                if self.char == 'fighter':
+                    pass
+                elif self.char == 'shield':
+                    pass
+                elif self.char == 'hammer':
+                    self.addStun(10)
+                elif self.char == 'spear' and 600 - self.attackTime[4] >= self.skill2_timer >= 600 - self.attackTime[5]:
+                    self.skill2 -= 10
+                    opponent.skill2 -= 4
+                opponent.damage(self.dmg)
+                self.skill2 += 10
+
+        elif self.attack == self.attackTime[1]: 
+            self.setImg(0)
+
+    def skill1Handler(self,opponent):
+        if self.skill1 == 0: 
+            self.setImg(3)
+        elif self.skill1 == self.attackTime[2]: 
+            self.setImg(4)
+            if self.isHit(opponent,self.attackX1,self.attackY1):
+                if self.char == 'fighter':
+                    self.addJump(10)
+                    opponent.addJump(20)
+                elif self.char == 'shield':
+                    opponent.addStun(30)
+                elif self.char == 'hammer':
+                    self.hammer.x = self.rect.center[0] - 15 + self.face * 15
+                    self.hammer.y = self.rect.center[1] - 25
+                    if self.face == -1:
+                        self.hammerImg = pygame.transform.flip(self.hammerImg, True, False)
+                    self.hammerFace = self.face
+                    self.skill2 -= 30
+                elif self.char == 'spear':
+                    pass
+                opponent.damage(self.dmg1)
+                self.skill2 += 30
+
+            if self.char == 'spear':
+                self.rect.x = min(760, self.rect.x + 200) if self.face == 1 else max(0,self.rect.x - 200)
+                self.addStun(10)
+
+        elif self.skill1 == self.attackTime[3]:
+            self.setImg(0)
+
+    def skill2Handler(self,opponent):
+        if self.skill2_timer == 600:
+            self.setImg(5)
+                
+            if self.char == 'fighter':
+                if self.isHit(opponent,self.attackX2,self.attackY2):
+                    self.addStun(25)
+                    opponent.addStun(120)
+                    opponent.rect.x = self.rect.x + self.face * 29
+                    opponent.rect.y = self.rect.y - 10
+                    opponent.damage(1)
+            elif self.char == 'shield':
+                self.addStun(30)
+            elif self.char == 'hammer':
+                pass
+            elif self.char == 'spear':
+                self.addStun(30)
+
+        elif self.skill2_timer == 600 - self.attackTime[4]:
+            self.setImg(6)
+            if self.isHit(opponent,self.attackX2,self.attackY2):
+                    
+                if self.char == 'fighter':
+                    opponent.rect.x = WIDTH - 40 if self.face == 1 else 0
+                    opponent.damage(self.dmg2)
+                elif self.char == 'shield':
+                    self.absorb = 4
+                elif self.char == 'hammer':
+                    self.addStun(60)
+                elif self.char == 'spear':
+                    self.cool = 5
+
+        elif self.skill2_timer == 600 - self.attackTime[5]:
+            self.setImg(0)
+
+            if self.char == 'fighter':
+                pass
+            elif self.char == 'shield':
+                self.absorb = 1
+            elif self.char == 'hammer':
+                pass
+            elif self.char == 'spear':
+                self.cool = 20
+
+    def attackUpdate(self,opponent):
+        if self.attack < self.cool:
+            self.attackHandler(opponent)
+        
+        if self.skill1 < self.cool1:
+            self.skill1Handler(opponent)
+        
+        if self.skill2_timer > 0:
+            self.skill2Handler(opponent)
+
+        self.hammerHandler(opponent)
+
+    def update(self):
+        if self.stun > 0: self.stun -= 1
+        if self.attack < self.cool: self.attack += 1
+        if self.skill1 < self.cool1: self.skill1 += 1
+        if self.skill2_timer > 0: self.skill2_timer -= 1
+
+        if self.stun == 0:
+            self.rect.y = min(260 ,self.rect.y - self.jump)
+            self.jump -= 1 
     
 
 # Function to draw players and health bars
 def draw():
+    global p1,p2
     screen.fill(WHITE)
 
     # Draw players
-    screen.blit(p1['image'], (p1['rect'].x - 30, p1['rect'].y - 15))
-    screen.blit(p2['image'], (p2['rect'].x - 30, p2['rect'].y - 15))
-    if p1['char'] == 'shield' and 600 - p1['attackTime'][5] <= p1['skill2_timer'] <= 600 - p1['attackTime'][4]: screen.blit(shieldImg, (p1['rect'].x, p1['rect'].y - 40))
-    if p2['char'] == 'shield' and 600 - p2['attackTime'][5] <= p2['skill2_timer'] <= 600 - p2['attackTime'][4]: screen.blit(shieldImg, (p2['rect'].x, p2['rect'].y - 40))
-    if p1['char'] == 'hammer' and p1['attackTime'][2]+1 <= p1['skill1'] <= p1['attackTime'][3] and 0 < p1['hammer'].x < 765: screen.blit(p1['hammerImg'], (p1['hammer'].x, p1['hammer'].y))
-    if p2['char'] == 'hammer' and p2['attackTime'][2] + 1 <= p2['skill1'] <= p2['attackTime'][3] and 0 < p2['hammer'].x < 765: screen.blit(p2['hammerImg'], (p2['hammer'].x, p2['hammer'].y))
-    if p1['char'] == 'hammer' and 600 - p1['attackTime'][4] >= p1['skill2_timer'] >= 600 - p1['attackTime'][5] and lightning1.x >= 0: screen.blit(lightningImg, lightning1)
-    if p2['char'] == 'hammer' and 600 - p2['attackTime'][4] >= p2['skill2_timer'] >= 600 - p2['attackTime'][5] and lightning2.x >= 0: screen.blit(lightningImg, lightning2)
-    if p1['char'] == 'spear' and 600 - p1['attackTime'][5] <= p1['skill2_timer'] <= 600 - p1['attackTime'][4]: screen.blit(speedImg, (p1['rect'].x, p1['rect'].y - 45))
-    if p2['char'] == 'spear' and 600 - p2['attackTime'][5] <= p2['skill2_timer'] <= 600 - p2['attackTime'][4]: screen.blit(speedImg, (p2['rect'].x, p2['rect'].y - 45))
+    screen.blit(p1.currentImg, (p1.rect.x - 30, p1.rect.y - 15))
+    screen.blit(p2.currentImg, (p2.rect.x - 30, p2.rect.y - 15))
+    if p1.char == 'shield' and 600 - p1.attackTime[5] <= p1.skill2_timer <= 600 - p1.attackTime[4]: screen.blit(p1.shieldImg, (p1.rect.x, p1.rect.y - 40))
+    if p2.char == 'shield' and 600 - p2.attackTime[5] <= p2.skill2_timer <= 600 - p2.attackTime[4]: screen.blit(p2.shieldImg, (p2.rect.x, p2.rect.y - 40))
+    if p1.char == 'hammer' and p1.attackTime[2] + 1 <= p1.skill1 <= p1.attackTime[3] and 0 < p1.hammer.x < 765: screen.blit(p1.hammerImg, (p1.hammer.x, p1.hammer.y))
+    if p2.char == 'hammer' and p2.attackTime[2] + 1 <= p2.skill1 <= p2.attackTime[3] and 0 < p2.hammer.x < 765: screen.blit(p2.hammerImg, (p2.hammer.x, p2.hammer.y))
+    if p1.char == 'hammer' and 600 - p1.attackTime[4] >= p1.skill2_timer >= 600 - p1.attackTime[5] and p1.lightning.x >= 0: screen.blit(p1.lightningImg, p1.lightning)
+    if p2.char == 'hammer' and 600 - p2.attackTime[4] >= p2.skill2_timer >= 600 - p2.attackTime[5] and p2.lightning.x >= 0: screen.blit(p2.lightningImg, p2.lightning)
+    if p1.char == 'spear' and 600 - p1.attackTime[5] <= p1.skill2_timer <= 600 - p1.attackTime[4]: screen.blit(p1.speedImg, (p1.rect.x, p1.rect.y - 45))
+    if p2.char == 'spear' and 600 - p2.attackTime[5] <= p2.skill2_timer <= 600 - p2.attackTime[4]: screen.blit(p2.speedImg, (p2.rect.x, p2.rect.y - 45))
 
     # Draw health bars
     pygame.draw.rect(screen, BLACK, (45, 45, 210, 47))
     pygame.draw.rect(screen, BLACK, (WIDTH - 255, 45, 210, 47))
-    pygame.draw.rect(screen, RED, (50, 50, 200/p1['maxHealth'] * p1['health'], 20))
-    pygame.draw.rect(screen, RED, (WIDTH - 250, 50, 200/p2['maxHealth'] * p2['health'], 20))
-    pygame.draw.rect(screen, BLUE, (50, 74, min(247, (200/p1['cool1']*p1['skill1'])), 5))
-    pygame.draw.rect(screen, BLUE, (WIDTH - 250, 74, min(247, (200/p2['cool1']*p2['skill1'])), 5))
-    pygame.draw.rect(screen, GREEN, (50, 83, min(247, (200/p1['cool2'] * min(p1['skill2'],p1['cool2']))), 5))
-    pygame.draw.rect(screen, GREEN, (WIDTH - 250, 83, min(247, (200/p2['cool2']*min(p2['skill2'],p2['cool2']))), 5))
+    pygame.draw.rect(screen, RED, (50, 50, 200/p1.maxHealth * p1.health, 20))
+    pygame.draw.rect(screen, RED, (WIDTH - 250, 50, 200/p2.maxHealth * p2.health, 20))
+    pygame.draw.rect(screen, BLUE, (50, 74, min(247, (200/p1.cool1*p1.skill1)), 5))
+    pygame.draw.rect(screen, BLUE, (WIDTH - 250, 74, min(247, (200/p2.cool1*p2.skill1)), 5))
+    pygame.draw.rect(screen, GREEN, (50, 83, min(247, (200/p1.cool2 * min(p1.skill2,p1.cool2))), 5))
+    pygame.draw.rect(screen, GREEN, (WIDTH - 250, 83, min(247, (200/p2.cool2*min(p2.skill2,p2.cool2))), 5))
     
-    # pygame.draw.rect(screen,RED,(lightning1.x,lightning1.y,lightning1.width,lightning1.height))
-    # pygame.draw.rect(screen, BLUE, (min(p2['rect'].center[0]+p2['face'] * p2['attackX1'][0], p2['rect'].center[0]+p2['face'] * p2['attackX1'][1]), p2['rect'].center[1] + p2['attackY1'][0], p2['attackX1'][1] - p2['attackX1'][0], p2['attackY1'][1] - p2['attackY1'][0]))
-    # pygame.draw.rect(screen, BLUE, (min(p1['rect'].center[0]+p1_face * p1['attackX1'][0], p1['rect'].center[0]+p1_face * p1['attackX1'][1]), p1['rect'].center[1] + p1['attackY1'][0], p1['attackX1'][1] - p1['attackX1'][0], p1['attackY1'][1] - p1['attackY1'][0]))
-    # pygame.draw.rect(screen, GREEN, (min(p2['rect'].center[0]+p2['face'] * p2['attackX2'][0], p2['rect'].center[0]+p2['face'] * p2['attackX2'][1]), p2['rect'].center[1] + p2['attackY2'][0], p2['attackX2'][1] - p2['attackX2'][0], p2['attackY2'][1] - p2['attackY2'][0]))
-    # pygame.draw.rect(screen, GREEN, (min(p1['rect'].center[0]+p1_face * p1['attackX2'][0], p1['rect'].center[0]+p1_face * p1['attackX2'][1]), p1['rect'].center[1] + p1['attackY2'][0], p1['attackX2'][1] - p1['attackX2'][0], p1['attackY2'][1] - p1['attackY2'][0]))
-
     pygame.display.flip()
 
-def move():
+def selectChar():
+    # Select Character
     global p1,p2
-    # Get keys
-    keys = pygame.key.get_pressed()
+    characters = ['fighter','shield','hammer','spear','fighter','fighter','fighter','fighter']
 
-    # Player 1 movement
-    if p1['stun'] == 0:
-        if keys[pygame.K_a] and p1['rect'].left > 0:
-            p1['rect'].x -= p1['speed']
-            if p1['face'] == 1:
-                p1['face'] = -1
-                setImg('p1')
-        if keys[pygame.K_d] and p1['rect'].right < WIDTH:
-            p1['rect'].x += p1['speed']
-            if p1['face'] == -1:
-                p1['face'] = 1
-                setImg('p1')
-        if keys[pygame.K_w] and p1['rect'].y == 260:
-            jump('p1', 15)
-        if keys[pygame.K_e] and p1['attack'] >= p1['cool'] and not(p1['char'] == 'hammer' and 0 < p1['hammer'].x < 765):
-            p1['attack'] = 0
-        if keys[pygame.K_r] and p1['skill1'] >= p1['cool1']:
-            p1['skill1'] = 0
-        if keys[pygame.K_t] and p1['skill2'] >= p1['cool2'] and not(p1['char'] == 'hammer' and 0 < p1['hammer'].x < 765):
-            p1['skill2'] = 0
-            p1['skill2_timer'] = 600
-    else: p1['stun'] -= 1
+    imgs = []
 
-    # Player 2 movement
-    if p2['stun'] == 0:
-        if keys[pygame.K_LEFT] and p2['rect'].left > 0:
-            p2['rect'].x -= p2['speed']
-            if p2['face'] == 1:
-                p2['face'] = -1
-                setImg('p2')
-        if keys[pygame.K_RIGHT] and p2['rect'].right < WIDTH:
-            p2['rect'].x += p2['speed']
-            if p2['face'] == -1:
-                p2['face'] = 1
-                setImg('p2')
-        if keys[pygame.K_UP] and p2['rect'].y == 260:
-            jump('p2',15)
-        if keys[pygame.K_SLASH] and p2['attack'] >= p2['cool'] and not(p2['char'] == 'hammer' and 0 < p2['hammer'].x < 765):
-            p2['attack'] = 0
-        if keys[pygame.K_PERIOD] and p2['skill1'] >= p2['cool1']:
-            p2['skill1'] = 0
-        if keys[pygame.K_COMMA] and p2['skill2'] >= p2['cool2'] and not(p2['char'] == 'hammer' and 0 < p2['hammer'].x < 765):
-            p2['skill2'] = 0
-            p2['skill2_timer'] = 600
-    else: p2['stun'] -= 1
+    for i,char in enumerate(characters):
+        image = pygame.image.load(f"src/characters/{char}/{char}.png")
+        image = pygame.transform.scale(image, (100, 100))
+        imgs.append(image)
 
-def update():
-    global p1, p2
+    p1,p2 = 0,0
+    p1_delay = 0
+    p2_delay = 0
+    p1_selected = False
+    p2_selected = False
 
-    # p1 attack
-    if p1['attack'] < p1['cool']:
-        if p1['attack'] == 0: 
-            setImg('p1', p1['face'],p1_imgs[1])
-        elif p1['attack'] == p1['attackTime'][0]:
-            setImg('p1', p1['face'],p1_imgs[2])
+    while True:
+        p1_delay -= 1
+        p2_delay -= 1
+        clock.tick(FPS)
 
-            if isHit(p2['rect'].x, p2['rect'].y, p1['rect'].center, p1['attackX'], p1['attackY'], p1['face']):
-                if p1['char'] == 'fighter':
-                    pass
-                elif p1['char'] == 'shield':
-                    pass
-                elif p1['char'] == 'hammer':
-                    stun('p2',10)
-                elif p1['char'] == 'spear' and 600 - p1['attackTime'][4] >= p1['skill2_timer'] >= 600 - p1['attackTime'][5]:
-                    p1['skill2'] -= 10
-                    p2['skill2'] -= 4
-                damage('p2',p1['dmg'])
-                p1['skill2'] += 10
-
-        elif p1['attack'] == p1['attackTime'][1]: 
-            setImg('p1', p1['face'],p1_imgs[0])
-    p1['attack'] += 1
-
-    # p1 skill1
-    if p1['skill1'] < p1['cool1']:
-        if p1['skill1'] == 0: 
-            setImg('p1', p1['face'],p1_imgs[3])
-        elif p1['skill1'] == p1['attackTime'][2]: 
-            setImg('p1', p1['face'],p1_imgs[4])
-            if isHit(p2['rect'].x, p2['rect'].y, p1['rect'].center, p1['attackX1'], p1['attackY1'], p1['face']):
-                if p1['char'] == 'fighter':
-                    jump('p1', 10)
-                    jump('p2', 20)
-                elif p1['char'] == 'shield':
-                    stun('p2',30)
-                elif p1['char'] == 'hammer':
-                    p1['hammer'].x = p1['rect'].center[0] - 15 + p1['face'] * 15
-                    p1['hammer'].y = p1['rect'].center[1] - 25
-                    if p1['face'] == -1:
-                        p1['hammerImg'] = pygame.transform.flip(p1['hammerImg'], True, False)
-                    p1['hammerFace'] = p1['face']
-                    p1['skill2'] -= 30
-                elif p1['char'] == 'spear':
-                    pass
-                damage('p2',p1['dmg1'])
-                p1['skill2'] += 30
-            if p1['char'] == 'spear':
-                p1['rect'].x = min(760, p1['rect'].x + 200) if p1['face'] == 1 else max(0,p1['rect'].x - 200)
-                stun('p1',10)
-
-        elif p1['skill1'] == p1['attackTime'][3]:
-            setImg('p1', p1['face'],p1_imgs[0])
-        p1['skill1'] += 1
-
-    # p1 skill2
-    if p1['skill2_timer'] > 0:
-        if p1['skill2_timer'] == 600:
-            setImg('p1', p1['face'],p1_imgs[5])
-
-            if p1['char'] == 'fighter':
-                if isHit(p2['rect'].x, p2['rect'].y, p1['rect'].center, p1['attackX2'], p1['attackY2'], p1['face']):
-                    stun('p1', 25)
-                    stun('p2', 120)
-                    p2['rect'].x = p1['rect'].x + p1['face'] * 29
-                    p2['rect'].y = p1['rect'].y - 10
-                    damage('p2',1)
-            elif p1['char'] == 'shield':
-                stun('p1', 30)
-            elif p1['char'] == 'hammer':
-                pass
-            elif p1['char'] == 'spear':
-                stun('p1', 30)
-
-        elif p1['skill2_timer'] == 600 - p1['attackTime'][4]:
-            setImg('p1', p1['face'],p1_imgs[6])
-
-            if isHit(p2['rect'].x, p2['rect'].y, p1['rect'].center, p1['attackX2'], p1['attackY2'], p1['face']):
-                if p1['char'] == 'fighter':
-                    p2['rect'].x = WIDTH - 40 if p1['face'] == 1 else 0
-                    damage('p2',p1['dmg2'])
-                elif p1['char'] == 'shield':
-                    p1['absorb'] = 4
-                elif p1['char'] == 'hammer':
-                    stun('p1',60)
-                elif p1['char'] == 'spear':
-                    p1['cool'] = 5
-
-        elif p1['skill2_timer'] == 600 - p1['attackTime'][5]:
-            setImg('p1', p1['face'],p1_imgs[0])
-
-            if p1['char'] == 'fighter':
-                pass
-            elif p1['char'] == 'shield':
-                p1['absorb'] = 1
-            elif p1['char'] == 'hammer':
-                pass
-            elif p1['char'] == 'spear':
-                p1['cool'] = 20
-
-        p1['skill2_timer'] -= 1
-
-    # p1 hammer 
-    if p1['char'] == 'hammer' and p1['attackTime'][2]+1 <= p1['skill1'] <= p1['attackTime'][3] and p1['skill1'] % 3 == 0 and 0 < p1['hammer'].x < 765:
-        p1['hammerImg'] = pygame.transform.rotate(p1['hammerImg'],p1['hammerFace'] * 90.0)
-        p1['hammer'].x = min(p1['hammer'].x + p1['hammerFace'] * 15, 765) if p1['hammerFace'] == 1 else max(p1['hammer'].x + p1['hammerFace'] * 15, 0)
-        if isHit(p2['rect'].x,p2['rect'].y, p1['hammer'].center, (-17,17), (-17,17),p1['hammerFace']):
-            damage('p2', 10)
-            p1['skill2'] += 30
-            p1['hammer'].x = 765
-            setImg('p1',p1['face'],p1_imgs[0])
-            p1['skill1'] = p1['cool1']
-        if p1['hammer'].x == 765 or p1['hammer'].x == 0:
-            setImg('p1',p1['face'],p1_imgs[0])
-            p1['skill1'] = p1['cool1']
-
-    #p1 lightning
-    if p1['char'] == 'hammer' and 600 - p1['attackTime'][5] <= p1['skill2_timer'] <= 600 - p1['attackTime'][4] and p1['skill2_timer'] % 10 == 0:
-        lightning1[0] = random.random() * 400 + p1['rect'].center[0] - 200
-        if isHit(p2['rect'].x,p2['rect'].y,lightning1.center,(-20,20),(-100,100),1):
-            damage('p2', 15) 
-
-    # p2 attack
-    if p2['attack'] < p2['cool']:
-        if p2['attack'] == 0:
-            setImg('p2', p2['face'],p2_imgs[1])
-        elif p2['attack'] == p2['attackTime'][0]:
-            setImg('p2', p2['face'],p2_imgs[2])
-
-            if isHit(p1['rect'].x, p1['rect'].y, p2['rect'].center, p2['attackX'], p2['attackY'], p2['face']):
-                damage('p1',p2['dmg'])
-                if p2['char'] == 'fighter':
-                    pass
-                elif p2['char'] == 'shield':
-                    pass
-                elif p2['char'] == 'hammer':
-                    stun('p1',10)
-                elif p2['char'] == 'spear' and 600 - p2['attackTime'][4] >= p2['skill2_timer'] >= 600 - p2['attackTime'][5]:
-                    p2['skill2'] -= 10
-                    p1['skill2'] -= 4
-                p2['skill2'] += 10
-
-        elif p2['attack'] == p2['attackTime'][1]:
-            setImg('p2', p2['face'],p2_imgs[0])
-        p2['attack'] += 1
-
-    # p2 skill1
-    if p2['skill1'] < p2['cool1']:
-        if p2['skill1'] == 0:
-            setImg('p2', p2['face'],p2_imgs[3])
-        elif p2['skill1'] == p2['attackTime'][2]:
-            setImg('p2', p2['face'],p2_imgs[4])
-
-            if isHit(p1['rect'].x, p1['rect'].y, p2['rect'].center, p2['attackX1'], p2['attackY1'], p2['face']):
-                if p2['char'] == 'fighter':
-                    jump('p2', 10)
-                    jump('p1', 20)
-                elif p2['char'] == 'shield':
-                    stun('p1', 30)
-                elif p2['char'] == 'hammer':
-                    p2['hammer'].x = p2['rect'].center[0] - 15 + p2['face'] * 15
-                    p2['hammer'].y = p2['rect'].center[1] - 25
-                    if p2['face'] == -1:
-                        p2['hammerImg'] = pygame.transform.flip(p2['hammerImg'], True, False)
-                    p2['hammerFace'] = p2['face']
-                    p2['skill2'] -= 30
-                damage('p1',p2['dmg1'])
-                p2['skill2'] += 30
-            if p2['char'] == 'spear':
-                p2['rect'].x = min(760, p2['rect'].x + 200) if p2['face'] == 1 else max(0,p2['rect'].x - 200)
-                stun('p2',10)
-
-        elif p2['skill1'] == p2['attackTime'][3]:
-            setImg('p2', p2['face'],p2_imgs[0])
-        p2['skill1'] += 1
-
-    # p2 skill2
-    if p2['skill2_timer'] > 0:
-        if p2['skill2_timer'] == 600:
-            setImg('p2', p2['face'],p2_imgs[5])
-
-            if isHit(p1['rect'].x, p1['rect'].y, p2['rect'].center, p2['attackX2'], p2['attackY2'], p2['face']):
-                if p2['char'] == 'fighter':
-                    stun('p2', 25)
-                    stun('p1', 120)
-                    p1['rect'].x = p2['rect'].x + p2['face'] * 29
-                    p1['rect'].y = p2['rect'].y - 10
-                    damage('p1',1)
-                elif p2['char'] == 'shield':
-                    stun('p2', 30)
-                elif p2['char'] == 'hammer':
-                    pass
-                elif p2['char'] == 'spear':
-                    stun('p2', 30)
-
-        elif p2['skill2_timer'] == 600 - p2['attackTime'][4]:
-            setImg('p2', p2['face'],p2_imgs[6])
-
-            if isHit(p1['rect'].x, p1['rect'].y, p2['rect'].center, p2['attackX2'], p2['attackY2'], p2['face']):
-                if p2['char'] == 'fighter':
-                    p1['rect'].x = WIDTH - 40 if p2['face'] == 1 else 0
-                    damage('p1',p2['dmg2'])
-                elif p2['char'] == 'shield':
-                    p2['absorb'] = 4
-                elif p2['char'] =='hammer':
-                    stun('p2',60)
-                elif p2['char'] == 'spear':
-                    p2['cool'] = 5
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
                 
+        
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_a] and p1 > 0 and p1_delay <= 0 and not p1_selected:
+            p1 -= 1
+            p1_delay = 10
+        elif keys[pygame.K_d] and p1 < len(imgs)-1 and p1_delay <= 0 and not p1_selected:
+            p1 += 1
+            p1_delay = 10
+        if keys[pygame.K_LEFT] and p2 > 0 and p2_delay <= 0 and not p2_selected:
+            p2 -= 1
+            p2_delay = 10
+        elif keys[pygame.K_RIGHT] and p2 < len(imgs)-1 and p2_delay <= 0 and not p2_selected:
+            p2 += 1
+            p2_delay = 10
+        if keys[pygame.K_e]:
+            p1_selected = True
+        if keys[pygame.K_SLASH]:
+            p2_selected = True
+        if keys[pygame.K_r]:
+            p1_selected = False
+        if keys[pygame.K_PERIOD]:
+            p2_selected = False
 
-        elif p2['skill2_timer'] == 600 - p2['attackTime'][5]:
-            setImg('p2', p2['face'],p2_imgs[0])
+        screen.fill(WHITE)
+        for i,img in enumerate(imgs):
+            screen.blit(img,(10 + 110 * i, 15))
+        pygame.draw.rect(screen, GREEN if p1_selected else BLUE, (10 + p1 * 110, 15, 100, 100), 4)
+        pygame.draw.rect(screen, GREEN if p2_selected else RED, (14 + p2 * 110, 19, 92, 92), 4)
 
-            if p2['char'] == 'fighter':
-                pass
-            elif p2['char'] == 'shield':
-                p2['absorb'] = 1
-            elif p2['char'] == 'spear':
-                p2['cool'] = 20
+        pygame.display.flip()
 
-        p2['skill2_timer'] -= 1
+        if p1_selected and p2_selected:
+            break
+    p1 = Player(characters[p1],1)
+    p2 = Player(characters[p2],2)
 
-    # p2 hammer 
-    if p2['char'] == 'hammer' and p2['attackTime'][2]+1 <= p2['skill1'] <= p2['attackTime'][3] and p2['skill1'] % 3 == 0 and 0 < p2['hammer'].x < 765:
-        p2['hammerImg'] = pygame.transform.rotate(p2['hammerImg'],p2['hammerFace'] * 90.0)
-        p2['hammer'].x = min(p2['hammer'].x + p2['hammerFace'] * 15, 765) if p2['hammerFace'] == 1 else max(p2['hammer'].x + p2['hammerFace'] * 15, 0)
-        if isHit(p1['rect'].x,p1['rect'].y, p2['hammer'].center, (-17,17), (-17,17),p2['hammerFace']):
-            damage('p1', 10)
-            p2['skill2'] += 30
-            p2['hammer'].x = 765
-            setImg('p2',p2['face'],p2_imgs[0])
-            p2['skill1'] = p2['cool1']
-        if p2['hammer'].x == 765 or p2['hammer'].x == 0:
-            setImg('p2',p2['face'],p2_imgs[0])
-            p2['skill1'] = p2['cool1']
-
-    #p2 lightning
-    if p2['char'] == 'hammer' and 600 - p2['attackTime'][5] <= p2['skill2_timer'] <= 600 - p2['attackTime'][4] and p2['skill2_timer'] % 10 == 0:
-        lightning2[0] = random.random() * 400 + p2['rect'].center[0] - 200
-        if isHit(p1['rect'].x,p1['rect'].y,lightning2.center,(-20,20),(-100,100),1):
-            damage('p1', 15)
-    
-    if p1['stun'] == 0:
-        p1['rect'].y = min(260 ,p1['rect'].y - p1['jump'])
-        p1['jump'] -= 1
-
-    if p2['stun'] == 0:
-        p2['rect'].y = min(260,p2['rect'].y - p2['jump'])
-        p2['jump'] -= 1
-
-
+selectChar()
 # Main game loop
+running = True
 while running:
     clock.tick(FPS)
 
@@ -647,17 +450,19 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-
-    move()
-    update()
     draw()
+    p1.move()
+    p2.move()
+    p1.attackUpdate(p2)
+    p2.attackUpdate(p1)
+    p1.update()
+    p2.update()
 
-    if p1['health'] <= 0 or p2['health'] <= 0:
+    if p1.health <= 0 or p2.health <= 0:
         running = False
-        winnerText = textFont.render(f"Player {'1' if p1['health'] > p2['health'] else '2' if p2['health'] > p1['health'] else '1,2'} Wins!", True, BLUE if p1['health'] >= p2['health'] else RED)
+        winnerText = textFont.render(f"Player {'1' if p1.health > p2.health else '2' if p2.health > p1.health else '1,2'} Wins!", True, BLUE if p1.health >= p2.health else RED)
         screen.blit(winnerText, (270,120))
         pygame.display.flip()
         time.sleep(10)
-
 
 pygame.quit()
