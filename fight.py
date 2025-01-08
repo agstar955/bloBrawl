@@ -26,24 +26,20 @@ FPS = 60
 
 PLAYER_WIDTH, PLAYER_HEIGHT = 100, 70
 
+background_image = pygame.image.load("src/background.png")
+background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
+
 def menu():
-    global running
+    global running, background_image
     # font = pygame.font.SysFont("malgungothic", 40)
 
-    title_text = textFont.render("BloBrawl", True, WHITE)
+    title_text = textFont.render("BloBrawl", True, BLACK)
     start_text = textFont.render("Start", True, BLACK)
     quit_text = textFont.render("Quit", True, BLACK)
 
     button_width, button_height = 200, 50
     start_button_rect = pygame.Rect((WIDTH // 2 - button_width // 2, 100), (button_width, button_height))
     quit_button_rect = pygame.Rect((WIDTH // 2 - button_width // 2, 200), (button_width, button_height))
-
-    background_image = None
-    try:
-        background_image = pygame.image.load("src/background.jpg")
-        background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
-    except FileNotFoundError:
-        print("배경 이미지를 찾을 수 없습니다. 기본 배경색으로 표시됩니다.")
 
     while running:
         for event in pygame.event.get():
@@ -57,10 +53,7 @@ def menu():
                     running = False
                     return
 
-        if background_image:
-            screen.blit(background_image, (0, 0))
-        else:
-            screen.fill(BLACK)
+        screen.blit(background_image, (0, 0))
 
         screen.blit(title_text, (WIDTH // 2 - title_text.get_width() // 2, 50))
 
@@ -75,7 +68,7 @@ def menu():
 
 def selectChar():
     # Select Character
-    global p1,p2, running
+    global p1,p2, running, background_image
     characters = ['fighter','shield','hammer','spear','fighter','fighter','fighter','fighter']
 
     imgs = []
@@ -84,6 +77,7 @@ def selectChar():
         image = pygame.image.load(f"src/characters/{char}/{char}.png")
         image = pygame.transform.scale(image, (100, 100))
         imgs.append(image)
+
 
     p1,p2 = 0,0
     p1_delay = 0
@@ -124,7 +118,9 @@ def selectChar():
         if keys[pygame.K_PERIOD]:
             p2_selected = False
 
-        screen.fill(WHITE)
+        # screen.fill(WHITE)
+        screen.blit(background_image, (0, 0))
+        
         for i,img in enumerate(imgs):
             screen.blit(img,(10 + 110 * i, 15))
         pygame.draw.rect(screen, GREEN if p1_selected else BLUE, (10 + p1 * 110, 15, 100, 100), 4)
@@ -139,8 +135,9 @@ def selectChar():
 
 # Function to draw players and health bars
 def draw():
-    global p1,p2
-    screen.fill(WHITE)
+    global p1,p2,background_image
+    # screen.fill(WHITE)
+    screen.blit(background_image, (0, 0))
 
     # Draw players
     screen.blit(p1.currentImg, (p1.rect.x - 30, p1.rect.y - 15))
