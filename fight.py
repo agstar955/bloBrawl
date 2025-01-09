@@ -10,7 +10,7 @@ pygame.init()
 WIDTH, HEIGHT = 800, 300
 screen = pygame.display.set_mode((WIDTH, HEIGHT),pygame.SCALED)
 pygame.display.set_caption("Game")
-textFont = pygame.font.SysFont(None, 50)
+textFont = pygame.font.SysFont(None, 70)
 
 # Colors
 WHITE = (255, 255, 255)
@@ -101,14 +101,14 @@ def setting():
 
         screen.blit(background_image, (0, 0))
         pygame.draw.rect(screen,GRAY,exitBtn)
-        screen.blit(exitText,(23,15,10,10))
+        screen.blit(exitText,(23,14,10,10))
         pygame.display.flip()
 
 def selectChar():
     # Select Character
     global p1,p2, running, background_image
     font = pygame.font.SysFont("malgungothic", 20)
-    characters = ['fighter','shield','hammer','spear','fighter','fighter','fighter','fighter']
+    characters = ['fighter','shield','hammer','spear','sword','fighter','fighter','fighter','fighter','fighter','fighter','fighter']
 
     imgs = []
 
@@ -145,18 +145,38 @@ def selectChar():
         if keys[pygame.K_ESCAPE]:
             running = False
             return
-        if keys[pygame.K_a] and p1 > 0 and p1_delay <= 0 and not p1_selected:
+        if keys[pygame.K_a] and p1_delay <= 0 and not p1_selected:
             p1 -= 1
             p1_delay = 10
-        elif keys[pygame.K_d] and p1 < len(imgs)-1 and p1_delay <= 0 and not p1_selected:
+            if p1 % 6 == 5: p1 += 6
+        elif keys[pygame.K_d] and p1_delay <= 0 and not p1_selected:
             p1 += 1
             p1_delay = 10
-        if keys[pygame.K_LEFT] and p2 > 0 and p2_delay <= 0 and not p2_selected:
+            if p1 % 6 == 0: p1 -= 6
+        if keys[pygame.K_w] and p1_delay <= 0 and not p1_selected:
+            p1 -= 6
+            p1_delay = 10
+            if p1 < 0: p1 = len(characters) + p1
+        elif keys[pygame.K_s] and p1_delay <= 0 and not p1_selected:
+            p1 += 6
+            p1_delay = 10
+            if p1 >= len(characters): p1 = p1 - len(characters)
+        if keys[pygame.K_LEFT] and p2_delay <= 0 and not p2_selected:
             p2 -= 1
             p2_delay = 10
-        elif keys[pygame.K_RIGHT] and p2 < len(imgs)-1 and p2_delay <= 0 and not p2_selected:
+            if p2 % 6 == 5: p2 += 6
+        elif keys[pygame.K_RIGHT] and p2_delay <= 0 and not p2_selected:
             p2 += 1
             p2_delay = 10
+            if p2 % 6 == 0: p2 -= 6
+        if keys[pygame.K_UP] and p2_delay <= 0 and not p2_selected:
+            p2 -= 6
+            p2_delay = 10
+            if p2 < 0: p2 = len(characters) + p2
+        elif keys[pygame.K_DOWN] and p2_delay <= 0 and not p2_selected:
+            p2 += 6
+            p2_delay = 10
+            if p2 >= len(characters): p2 = p2 - len(characters)
         if keys[pygame.K_e]:
             p1_selected = True
         if keys[pygame.K_SLASH]:
@@ -170,12 +190,18 @@ def selectChar():
         screen.blit(background_image, (0, 0))
 
         pygame.draw.rect(screen,GRAY,exitBtn)
-        screen.blit(exitText,(23,15,10,10))
+        screen.blit(exitText,(23,14,10,10))
         
         for i,img in enumerate(imgs):
-            screen.blit(img,(10 + 110 * i, 55))
-        pygame.draw.rect(screen, GREEN if p1_selected else BLUE, (10 + p1 * 110, 55, 100, 100), 4)
-        pygame.draw.rect(screen, GREEN if p2_selected else RED, (14 + p2 * 110, 59, 92, 92), 4)
+            img = pygame.transform.scale(img,(50,50))
+            screen.blit(img,(250 + 50 * (i % 6), 50 + 50 * (i // 6)))
+        pygame.draw.rect(screen, GREEN if p1_selected else BLUE, (250 + 50 * (p1 % 6), 50 + 50 * (p1 // 6), 50, 50), 2)
+        pygame.draw.rect(screen, GREEN if p2_selected else RED, (252 + 50 * (p2 % 6), 52 + 50 * (p2 // 6), 46, 46), 2)
+
+        screen.blit(imgs[p1],(130,100))
+        screen.blit(imgs[p2],(570,100))
+        pygame.draw.rect(screen, GREEN if p1_selected else BLUE, (130, 100, 100, 100), 4)
+        pygame.draw.rect(screen, GREEN if p2_selected else RED, (570, 100, 100, 100), 4)
 
         pygame.display.flip()
 
@@ -183,6 +209,8 @@ def selectChar():
             break
     p1 = Player(characters[p1],1)
     p2 = Player(characters[p2],2)
+    p1.setImg(0)
+    p2.setImg(0)
     draw()
 
 # Function to draw players and health bars
@@ -194,14 +222,21 @@ def draw():
     # Draw players
     screen.blit(p1.currentImg, (p1.rect.x - 30, p1.rect.y - 15))
     screen.blit(p2.currentImg, (p2.rect.x - 30, p2.rect.y - 15))
-    if p1.char == 'shield' and 600 - p1.attackTime[5] <= p1.skill2_timer <= 600 - p1.attackTime[4]: screen.blit(p1.shieldImg, (p1.rect.x, p1.rect.y - 40))
-    if p2.char == 'shield' and 600 - p2.attackTime[5] <= p2.skill2_timer <= 600 - p2.attackTime[4]: screen.blit(p2.shieldImg, (p2.rect.x, p2.rect.y - 40))
-    if p1.char == 'hammer' and p1.attackTime[2] + 1 <= p1.skill1 <= p1.attackTime[3] and 0 < p1.hammer.x < 765: screen.blit(p1.hammerImg, (p1.hammer.x, p1.hammer.y))
-    if p2.char == 'hammer' and p2.attackTime[2] + 1 <= p2.skill1 <= p2.attackTime[3] and 0 < p2.hammer.x < 765: screen.blit(p2.hammerImg, (p2.hammer.x, p2.hammer.y))
-    if p1.char == 'hammer' and 600 - p1.attackTime[4] >= p1.skill2_timer >= 600 - p1.attackTime[5] and p1.lightning.x >= 0: screen.blit(p1.lightningImg, p1.lightning)
-    if p2.char == 'hammer' and 600 - p2.attackTime[4] >= p2.skill2_timer >= 600 - p2.attackTime[5] and p2.lightning.x >= 0: screen.blit(p2.lightningImg, p2.lightning)
-    if p1.char == 'spear' and 600 - p1.attackTime[5] <= p1.skill2_timer <= 600 - p1.attackTime[4]: screen.blit(p1.speedImg, (p1.rect.x, p1.rect.y - 45))
-    if p2.char == 'spear' and 600 - p2.attackTime[5] <= p2.skill2_timer <= 600 - p2.attackTime[4]: screen.blit(p2.speedImg, (p2.rect.x, p2.rect.y - 45))
+    if p1.char == 'shield' and 600 - p1.attackTime2[1] <= p1.skill2_timer <= 600 - p1.attackTime2[0]: screen.blit(p1.shieldImg, (p1.rect.x, p1.rect.y - 40))
+    if p2.char == 'shield' and 600 - p2.attackTime2[1] <= p2.skill2_timer <= 600 - p2.attackTime2[0]: screen.blit(p2.shieldImg, (p2.rect.x, p2.rect.y - 40))
+    if p1.char == 'hammer' and p1.attackTime1[0] + 1 <= p1.skill1 <= p1.attackTime1[1] and 0 < p1.hammer.x < 765: screen.blit(p1.hammerImg, (p1.hammer.x, p1.hammer.y))
+    if p2.char == 'hammer' and p2.attackTime1[0] + 1 <= p2.skill1 <= p2.attackTime1[1] and 0 < p2.hammer.x < 765: screen.blit(p2.hammerImg, (p2.hammer.x, p2.hammer.y))
+    if p1.char == 'hammer' and 600 - p1.attackTime2[0] >= p1.skill2_timer >= 600 - p1.attackTime2[1] and p1.lightning.x >= 0: screen.blit(p1.lightningImg, p1.lightning)
+    if p2.char == 'hammer' and 600 - p2.attackTime2[0] >= p2.skill2_timer >= 600 - p2.attackTime2[1] and p2.lightning.x >= 0: screen.blit(p2.lightningImg, p2.lightning)
+    if p1.char == 'spear' and 600 - p1.attackTime2[1] <= p1.skill2_timer <= 600 - p1.attackTime2[0]: screen.blit(p1.speedImg, (p1.rect.x, p1.rect.y - 45))
+    if p2.char == 'spear' and 600 - p2.attackTime2[1] <= p2.skill2_timer <= 600 - p2.attackTime2[0]: screen.blit(p2.speedImg, (p2.rect.x, p2.rect.y - 45))
+    if p1.char == 'sword' and 600 - p1.attackTime2[1] - 10 <= p1.skill2_timer <= 600 - p1.attackTime2[1]: 
+        pygame.draw.rect(screen,WHITE,(p2.rect.center[0] - 80, p2.rect.center[1] - 1, 160, 2))
+        pygame.display.flip()
+    if p2.char == 'sword' and 600 - p2.attackTime2[1] - 10 <= p2.skill2_timer <= 600 - p2.attackTime2[1]: 
+        pygame.draw.rect(screen,WHITE,(p1.rect.center[0] - 80, p1.rect.center[1] - 1, 160, 2))
+        pygame.display.flip()
+    
 
     # Draw health bars
     pygame.draw.rect(screen, BLACK, (45, 45, 210, 47))
@@ -228,15 +263,17 @@ class Player():
             self.knockbackPower = 10
             self.attackX = [25,45]
             self.attackY = [0,20]
+            self.attackTime = [1,4]
             self.dmg1 = 8
             self.cool1 = 200
             self.attackX1 = [20,40]
             self.attackY1 = [-20,20]
+            self.attackTime1 = [1,6]
             self.dmg2 = 20
             self.cool2 = 200
             self.attackX2 = [10,45]
             self.attackY2 = [-20,20]
-            self.attackTime = [1, 4, 1, 6, 20, 25]
+            self.attackTime2 = [20, 25]
         elif char == 'shield':
             self.char = 'shield'
             self.maxHealth = 100
@@ -248,15 +285,17 @@ class Player():
             self.knockbackPower = 10
             self.attackX = [20,35]
             self.attackY = [-5,20]
+            self.attackTime = [1,6]
             self.dmg1 = 10
             self.cool1 = 300
             self.attackX1 = [-60,60]
             self.attackY1 = [15,20]
+            self.attackTime1 = [6,10]
             self.dmg2 = 0
             self.cool2 = 200
             self.attackX2 = [-800,800]
             self.attackY2 = [-300,300]
-            self.attackTime = [1, 6, 6, 10, 30, 330]
+            self.attackTime2 = [30, 330]
         elif char == 'hammer':
             self.char = 'hammer'
             self.maxHealth = 100
@@ -268,15 +307,17 @@ class Player():
             self.knockbackPower = 10
             self.attackX = [20,35]
             self.attackY = [-20,15]
+            self.attackTime = [20,30]
             self.dmg1 = 0
             self.cool1 = 300
             self.attackX1 = [-800,800]
             self.attackY1 = [-300,300]
+            self.attackTime1 = [30, 180]
             self.dmg2 = 0
             self.cool2 = 150
             self.attackX2 = [-800,800]
             self.attackY2 = [-300,300]
-            self.attackTime = [20, 30, 30, 180, 30, 150]
+            self.attackTime2 = [30, 150]
         elif char == 'spear':
             self.char = 'spear'
             self.maxHealth = 100
@@ -288,15 +329,39 @@ class Player():
             self.knockbackPower = 10
             self.attackX = [20,70]
             self.attackY = [0,15]
+            self.attackTime = [1,3]
             self.cool1 = 100
             self.dmg1 = 3
             self.attackX1 = [10,210]
             self.attackY1 = [0,15]
+            self.attackTime1 = [1,10]
             self.dmg2 = 0
             self.cool2 = 250
             self.attackX2 = [-800,800]
             self.attackY2 = [-300,300]
-            self.attackTime = [1, 3, 1, 10, 30, 330]
+            self.attackTime2 = [30, 330]
+        elif char == 'sword':
+            self.char = 'sword'
+            self.maxHealth = 100
+            self.speed = 6
+            self.jumpPower = 15
+            self.absorb = 0
+            self.dmg = 0.5
+            self.cool = 40
+            self.knockbackPower = 10
+            self.attackX = [30,45]
+            self.attackY = [-20,20]
+            self.attackTime = [10,20]
+            self.cool1 = 100
+            self.dmg1 = 0.5
+            self.attackX1 = [30,45]
+            self.attackY1 = [-20,20]
+            self.attackTime1 = [5,10,15,20,25,30]
+            self.dmg2 = 20
+            self.cool2 = 250
+            self.attackX2 = [-800,800]
+            self.attackY2 = [-300,300]
+            self.attackTime2 = [10, 60]
 
         self.rect = pygame.Rect(100 if player == 1 else 660, HEIGHT - PLAYER_HEIGHT + 30, 40, 40)
         self.player = player
@@ -400,7 +465,7 @@ class Player():
                 self.skill2_timer = 600
 
     def hammerHandler(self,opponent):
-        if self.char == 'hammer' and self.attackTime[2]+1 <= self.skill1 <= self.attackTime[3] and self.skill1 % 3 == 0 and 0 < self.hammer.x < 765:
+        if self.char == 'hammer' and self.attackTime1[0]+1 <= self.skill1 <= self.attackTime1[1] and self.skill1 % 3 == 0 and 0 < self.hammer.x < 765:
             self.hammerImg = pygame.transform.rotate(self.hammerImg,self.hammerFace * 90.0)
             self.hammer.x = min(self.hammer.x + self.hammerFace * 15, 765) if self.hammerFace == 1 else max(self.hammer.x + self.hammerFace * 15, 0)
             if self.isHit(opponent,(-17,17),(-17,17),self.hammer.center):
@@ -415,7 +480,7 @@ class Player():
             else:
                 self.setImg(4)
 
-        if self.char == 'hammer' and 600 - self.attackTime[5] < self.skill2_timer <= 600 - self.attackTime[4]:
+        if self.char == 'hammer' and 600 - self.attackTime2[1] < self.skill2_timer <= 600 - self.attackTime2[0]:
             self.setImg(6)
             if self.skill2_timer % 10 == 0:
                 self.lightning[0] = random.random() * 400 + self.rect.center[0] - 200
@@ -423,100 +488,204 @@ class Player():
                     opponent.damage(15) 
 
     def attackHandler(self,opponent):
-        if self.attack == 0: 
-            self.setImg(1)
-        elif self.attack == self.attackTime[0]:
-            self.setImg(2)
-
-            if self.isHit(opponent,self.attackX,self.attackY):
-                if self.char == 'fighter':
-                    pass
-                elif self.char == 'shield':
-                    pass
-                elif self.char == 'hammer':
+        if self.char == 'fighter':
+            if self.attack == 0: 
+                self.setImg(1)
+            elif self.attack == self.attackTime[0]:
+                self.setImg(2)
+                if self.isHit(opponent,self.attackX,self.attackY):
+                    opponent.damage(self.dmg)
+                    self.skill2 += 10
+            elif self.attack == self.attackTime[1]:  
+                self.setImg(0)
+        
+        elif self.char == 'shield':
+            if self.attack == 0: 
+                self.setImg(1)
+            elif self.attack == self.attackTime[0]:
+                self.setImg(2)
+                if self.isHit(opponent,self.attackX,self.attackY):
+                    opponent.damage(self.dmg)
+                    self.skill2 += 10
+            elif self.attack == self.attackTime[1]: 
+                self.setImg(0)
+        
+        elif self.char == 'hammer':
+            if self.attack == 0: 
+                self.setImg(1)
+            elif self.attack == self.attackTime[0]:
+                self.setImg(2)
+                if self.isHit(opponent,self.attackX,self.attackY):
                     self.addStun(10)
-                elif self.char == 'spear' and 600 - self.attackTime[4] >= self.skill2_timer >= 600 - self.attackTime[5]:
-                    self.skill2 -= 10
-                    opponent.skill2 -= 4
-                opponent.damage(self.dmg)
-                self.skill2 += 10
+                    opponent.damage(self.dmg)
+                    self.skill2 += 10
+            elif self.attack == self.attackTime[1]: 
+                self.setImg(0)
 
-        elif self.attack == self.attackTime[1]: 
-            self.setImg(0)
+        elif self.char == 'spear':
+            if self.attack == 0: 
+                self.setImg(1)
+            elif self.attack == self.attackTime[0]:
+                self.setImg(2)
+                if self.isHit(opponent,self.attackX,self.attackY):
+                    if 600 - self.attackTime2[0] <= self.skill2_timer or self.skill2_timer <= 600 - self.attackTime2[1]:
+                        self.skill2 += 10
+                        opponent.skill2 -= 4
+                    opponent.damage(self.dmg)
+                    self.skill2 += 10
+            elif self.attack == self.attackTime[1]: 
+                self.setImg(0)
+
+        elif self.char == 'sword':
+            if self.attack == 0: 
+                self.setImg(1)
+                if self.isHit(opponent,self.attackX,self.attackY):
+                    opponent.damage(self.dmg)
+                    self.skill2 += 10
+                    opponent.skill2 -= 2
+            elif self.attack == self.attackTime[0]:
+                self.setImg(2)
+                if self.isHit(opponent,self.attackX,self.attackY):
+                    opponent.damage(self.dmg)
+                    self.skill2 += 10
+                    opponent.skill2 -= 2
+            elif self.attack == self.attackTime[1]: 
+                self.setImg(0)
 
     def skill1Handler(self,opponent):
-        if self.skill1 == 0: 
-            self.setImg(3)
-        elif self.skill1 == self.attackTime[2]: 
-            self.setImg(4)
-            if self.isHit(opponent,self.attackX1,self.attackY1):
-                if self.char == 'fighter':
-                    self.addJump(10)
-                    opponent.addJump(20)
-                elif self.char == 'shield':
-                    opponent.addStun(30)
-                elif self.char == 'hammer':
+        if self.char == 'fighter':
+            if self.skill1 == 0: 
+                self.setImg(3)
+            elif self.skill1 == self.attackTime1[0]: 
+                self.setImg(4)
+                if self.isHit(opponent,self.attackX1,self.attackY1):
+                    if self.char == 'fighter':
+                        self.addJump(10)
+                        opponent.addJump(20)
+                        opponent.damage(self.dmg1)
+                        self.skill2 += 30
+            elif self.skill1 == self.attackTime1[1]:
+                self.setImg(0)
+
+        elif self.char == 'shield':
+            if self.skill1 == 0: 
+                self.setImg(3)
+            elif self.skill1 == self.attackTime1[0]: 
+                self.setImg(4)
+                if self.isHit(opponent,self.attackX1,self.attackY1):
+                        opponent.addStun(30)
+                        opponent.damage(self.dmg1)
+                        self.skill2 += 30
+            elif self.skill1 == self.attackTime1[1]:
+                self.setImg(0)
+
+        elif self.char == 'hammer':
+            if self.skill1 == 0: 
+                self.setImg(3)
+            elif self.skill1 == self.attackTime1[0]: 
+                self.setImg(4)
+                if self.isHit(opponent,self.attackX1,self.attackY1):
                     self.hammer.x = self.rect.center[0] - 15 + self.face * 15
                     self.hammer.y = self.rect.center[1] - 25
                     if self.face == -1:
                         self.hammerImg = pygame.transform.flip(self.hammerImg, True, False)
                     self.hammerFace = self.face
                     self.skill2 -= 30
-                elif self.char == 'spear':
-                    pass
-                opponent.damage(self.dmg1)
-                self.skill2 += 30
+                    opponent.damage(self.dmg1)
+                    self.skill2 += 30
+            elif self.skill1 == self.attackTime1[1]:
+                self.setImg(0)
 
-            if self.char == 'spear':
+        elif self.char == 'spear':
+            if self.skill1 == 0: 
+                self.setImg(3)
+            elif self.skill1 == self.attackTime1[0]: 
+                self.setImg(4)
+                if self.isHit(opponent,self.attackX1,self.attackY1):
+                    opponent.damage(self.dmg1)
+                    self.skill2 += 30
                 self.rect.x = min(760, self.rect.x + 200) if self.face == 1 else max(0,self.rect.x - 200)
                 self.addStun(10)
+            elif self.skill1 == self.attackTime1[1]:
+                self.setImg(0)
+                
+        elif self.char == 'sword':
+            if self.skill1 == 0: 
+                self.setImg(3)
+                if self.isHit(opponent,self.attackX1,self.attackY1):
+                    opponent.damage(self.dmg1)
+                    self.skill2 += 10
+                    opponent.skill2 -= 2
+            for i in range(0,6):
+                if self.skill1 == self.attackTime1[i]:
+                    self.setImg(3 if i%2 == 1 else 4)
+                    if self.isHit(opponent,self.attackX1,self.attackY1):
+                        opponent.damage(self.dmg1)
+                        self.skill2 += 10
+                        opponent.skill2 -= 2
+                    if i == 5:
+                        self.setImg(0)    
 
-        elif self.skill1 == self.attackTime[3]:
-            self.setImg(0)
 
     def skill2Handler(self,opponent):
-        if self.skill2_timer == 600:
-            self.setImg(5)
-                
-            if self.char == 'fighter':
+        if self.char == 'fighter':
+            if self.skill2_timer == 600:
+                self.setImg(5)
                 if self.isHit(opponent,self.attackX2,self.attackY2):
                     self.addStun(25)
                     opponent.addStun(120)
                     opponent.rect.x = self.rect.x + self.face * 29
                     opponent.rect.y = self.rect.y - 10
                     opponent.damage(1)
-            elif self.char == 'shield':
-                self.addStun(30)
-            elif self.char == 'hammer':
-                pass
-            elif self.char == 'spear':
-                self.addStun(30)
-
-        elif self.skill2_timer == 600 - self.attackTime[4]:
-            self.setImg(6)
-            if self.isHit(opponent,self.attackX2,self.attackY2):
-                    
-                if self.char == 'fighter':
+            elif self.skill2_timer == 600 - self.attackTime2[0]:
+                self.setImg(6)
+                if self.isHit(opponent,self.attackX2,self.attackY2):
                     opponent.rect.x = WIDTH - 40 if self.face == 1 else 0
                     opponent.damage(self.dmg2)
-                elif self.char == 'shield':
-                    self.absorb = 4
-                elif self.char == 'hammer':
-                    self.addStun(120)
-                elif self.char == 'spear':
-                    self.cool = 5
-
-        elif self.skill2_timer == 600 - self.attackTime[5]:
-            self.setImg(0)
-
-            if self.char == 'fighter':
-                pass
-            elif self.char == 'shield':
+            elif self.skill2_timer == 600 - self.attackTime2[1]:
+                self.setImg(0)
+        
+        elif self.char == 'shield':
+            if self.skill2_timer == 600:
+                self.setImg(5)
+                self.addStun(30)
+            elif self.skill2_timer == 600 - self.attackTime2[0]:
+                self.setImg(6)
+                self.absorb = 4
+            elif self.skill2_timer == 600 - self.attackTime2[1]:
+                self.setImg(0)
                 self.absorb = 1
-            elif self.char == 'hammer':
-                pass
-            elif self.char == 'spear':
+
+        elif self.char == 'hammer':
+            if self.skill2_timer == 600:
+                self.setImg(5)
+            elif self.skill2_timer == 600 - self.attackTime2[0]:
+                self.setImg(6)
+                if self.isHit(opponent,self.attackX2,self.attackY2):
+                    self.addStun(120)
+            elif self.skill2_timer == 600 - self.attackTime2[1]:
+                self.setImg(0)
+
+        elif self.char == 'spear':
+            if self.skill2_timer == 600:
+                self.setImg(5)
+                self.addStun(30)
+            elif self.skill2_timer == 600 - self.attackTime2[0]:
+                self.setImg(6)
+                self.cool = 5
+            elif self.skill2_timer == 600 - self.attackTime2[1]:
+                self.setImg(0)
                 self.cool = 20
+        
+        elif self.char == 'sword':
+            if self.skill2_timer == 600:
+                self.setImg(5)
+                self.addStun(100)
+            elif self.skill2_timer == 600 - self.attackTime2[0]:
+                self.setImg(6)
+            elif self.skill2_timer == 600 - self.attackTime2[1]:
+                self.setImg(0)
+                opponent.damage(self.dmg2)
 
     def attackUpdate(self,opponent):
         if self.attack < self.cool:
@@ -566,7 +735,7 @@ while running:
         if p1.health <= 0 or p2.health <= 0:
             running = False
             winnerText = textFont.render(f"Player {'1' if p1.health > p2.health else '2' if p2.health > p1.health else '1,2'} Wins!", True, BLUE if p1.health >= p2.health else RED)
-            screen.blit(winnerText, (270,120))
+            screen.blit(winnerText, (WIDTH // 2 - winnerText.get_width() // 2,120))
             pygame.display.flip()
             time.sleep(3)
     running = True
