@@ -1,6 +1,7 @@
 import pygame
 import random
 import time
+import sys
 
 # Initialize Pygame
 pygame.init()
@@ -17,12 +18,202 @@ RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
+GRAY = (125,125,125)
 
 # Clock for frame rate
 clock = pygame.time.Clock()
 FPS = 60
 
 PLAYER_WIDTH, PLAYER_HEIGHT = 100, 70
+
+background_image = pygame.image.load("src/background.png")
+background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
+
+def menu():
+    global running, background_image
+    font = pygame.font.SysFont("malgungothic", 20)
+
+    title_text = textFont.render("BloBrawl", True, BLACK)
+    start_text = font.render("Start", True, BLACK)
+    setting_text = font.render("Setting", True, BLACK)
+    quit_text = font.render("Quit", True, BLACK)
+
+    button_width, button_height = 200, 40
+    start_button_rect = pygame.Rect((WIDTH // 2 - button_width // 2, 120), (button_width, button_height))
+    setting_button_rect = pygame.Rect((WIDTH // 2 - button_width // 2, 170), (button_width, button_height))
+    quit_button_rect = pygame.Rect((WIDTH // 2 - button_width // 2, 220), (button_width, button_height))
+
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+                return
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if start_button_rect.collidepoint(event.pos):
+                    return
+                if setting_button_rect.collidepoint(event.pos):
+                    setting()
+                elif quit_button_rect.collidepoint(event.pos):
+                    running = False
+                    return
+        
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_SPACE]:
+            return
+        if keys[pygame.K_ESCAPE]:
+            running = False
+            return
+
+        screen.blit(background_image, (0, 0))
+
+        screen.blit(title_text, (WIDTH // 2 - title_text.get_width() // 2, 50))
+
+        pygame.draw.rect(screen, GRAY, start_button_rect)
+        pygame.draw.rect(screen, GRAY, setting_button_rect)
+        pygame.draw.rect(screen, GRAY, quit_button_rect)
+
+        screen.blit(start_text, (start_button_rect.x + (button_width - start_text.get_width()) // 2, start_button_rect.y + (button_height - start_text.get_height()) // 2))
+        screen.blit(setting_text, (setting_button_rect.x + (button_width - setting_text.get_width()) // 2, setting_button_rect.y + (button_height - setting_text.get_height()) // 2))
+        screen.blit(quit_text, (quit_button_rect.x + (button_width - quit_text.get_width()) // 2, quit_button_rect.y + (button_height - quit_text.get_height()) // 2))
+
+        pygame.display.flip()
+
+def setting():
+    global running, background_image
+    font = pygame.font.SysFont("malgungothic", 20)
+
+    exitBtn = pygame.Rect((15, 15), (30, 30))
+    exitText = font.render('×',True,BLACK)
+
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if exitBtn.collidepoint(event.pos):
+                    return
+        
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_ESCAPE]:
+            return
+
+
+
+        screen.blit(background_image, (0, 0))
+        pygame.draw.rect(screen,GRAY,exitBtn)
+        screen.blit(exitText,(23,15,10,10))
+        pygame.display.flip()
+
+def selectChar():
+    # Select Character
+    global p1,p2, running, background_image
+    font = pygame.font.SysFont("malgungothic", 20)
+    characters = ['fighter','shield','hammer','spear','fighter','fighter','fighter','fighter']
+
+    imgs = []
+
+    for i,char in enumerate(characters):
+        image = pygame.image.load(f"src/characters/{char}/{char}.png")
+        image = pygame.transform.scale(image, (100, 100))
+        imgs.append(image)
+
+
+    p1,p2 = 0,0
+    p1_delay = 0
+    p2_delay = 0
+    p1_selected = False
+    p2_selected = False
+
+    exitBtn = pygame.Rect((15, 15), (30, 30))
+    exitText = font.render('×',True,BLACK)
+
+    while running:
+        p1_delay -= 1
+        p2_delay -= 1
+        clock.tick(FPS)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+                return
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if exitBtn.collidepoint(event.pos):
+                    running = False
+                    return
+        
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_ESCAPE]:
+            running = False
+            return
+        if keys[pygame.K_a] and p1 > 0 and p1_delay <= 0 and not p1_selected:
+            p1 -= 1
+            p1_delay = 10
+        elif keys[pygame.K_d] and p1 < len(imgs)-1 and p1_delay <= 0 and not p1_selected:
+            p1 += 1
+            p1_delay = 10
+        if keys[pygame.K_LEFT] and p2 > 0 and p2_delay <= 0 and not p2_selected:
+            p2 -= 1
+            p2_delay = 10
+        elif keys[pygame.K_RIGHT] and p2 < len(imgs)-1 and p2_delay <= 0 and not p2_selected:
+            p2 += 1
+            p2_delay = 10
+        if keys[pygame.K_e]:
+            p1_selected = True
+        if keys[pygame.K_SLASH]:
+            p2_selected = True
+        if keys[pygame.K_r]:
+            p1_selected = False
+        if keys[pygame.K_PERIOD]:
+            p2_selected = False
+
+        # screen.fill(WHITE)
+        screen.blit(background_image, (0, 0))
+
+        pygame.draw.rect(screen,GRAY,exitBtn)
+        screen.blit(exitText,(23,15,10,10))
+        
+        for i,img in enumerate(imgs):
+            screen.blit(img,(10 + 110 * i, 55))
+        pygame.draw.rect(screen, GREEN if p1_selected else BLUE, (10 + p1 * 110, 55, 100, 100), 4)
+        pygame.draw.rect(screen, GREEN if p2_selected else RED, (14 + p2 * 110, 59, 92, 92), 4)
+
+        pygame.display.flip()
+
+        if p1_selected and p2_selected:
+            break
+    p1 = Player(characters[p1],1)
+    p2 = Player(characters[p2],2)
+    draw()
+
+# Function to draw players and health bars
+def draw():
+    global p1,p2,background_image
+    # screen.fill(WHITE)
+    screen.blit(background_image, (0, 0))
+
+    # Draw players
+    screen.blit(p1.currentImg, (p1.rect.x - 30, p1.rect.y - 15))
+    screen.blit(p2.currentImg, (p2.rect.x - 30, p2.rect.y - 15))
+    if p1.char == 'shield' and 600 - p1.attackTime[5] <= p1.skill2_timer <= 600 - p1.attackTime[4]: screen.blit(p1.shieldImg, (p1.rect.x, p1.rect.y - 40))
+    if p2.char == 'shield' and 600 - p2.attackTime[5] <= p2.skill2_timer <= 600 - p2.attackTime[4]: screen.blit(p2.shieldImg, (p2.rect.x, p2.rect.y - 40))
+    if p1.char == 'hammer' and p1.attackTime[2] + 1 <= p1.skill1 <= p1.attackTime[3] and 0 < p1.hammer.x < 765: screen.blit(p1.hammerImg, (p1.hammer.x, p1.hammer.y))
+    if p2.char == 'hammer' and p2.attackTime[2] + 1 <= p2.skill1 <= p2.attackTime[3] and 0 < p2.hammer.x < 765: screen.blit(p2.hammerImg, (p2.hammer.x, p2.hammer.y))
+    if p1.char == 'hammer' and 600 - p1.attackTime[4] >= p1.skill2_timer >= 600 - p1.attackTime[5] and p1.lightning.x >= 0: screen.blit(p1.lightningImg, p1.lightning)
+    if p2.char == 'hammer' and 600 - p2.attackTime[4] >= p2.skill2_timer >= 600 - p2.attackTime[5] and p2.lightning.x >= 0: screen.blit(p2.lightningImg, p2.lightning)
+    if p1.char == 'spear' and 600 - p1.attackTime[5] <= p1.skill2_timer <= 600 - p1.attackTime[4]: screen.blit(p1.speedImg, (p1.rect.x, p1.rect.y - 45))
+    if p2.char == 'spear' and 600 - p2.attackTime[5] <= p2.skill2_timer <= 600 - p2.attackTime[4]: screen.blit(p2.speedImg, (p2.rect.x, p2.rect.y - 45))
+
+    # Draw health bars
+    pygame.draw.rect(screen, BLACK, (45, 45, 210, 47))
+    pygame.draw.rect(screen, BLACK, (WIDTH - 255, 45, 210, 47))
+    pygame.draw.rect(screen, RED, (50, 50, 200/p1.maxHealth * p1.health, 20))
+    pygame.draw.rect(screen, RED, (WIDTH - 250, 50, 200/p2.maxHealth * p2.health, 20))
+    pygame.draw.rect(screen, BLUE, (50, 74, min(247, (200/p1.cool1*p1.skill1)), 5))
+    pygame.draw.rect(screen, BLUE, (WIDTH - 250, 74, min(247, (200/p2.cool1*p2.skill1)), 5))
+    pygame.draw.rect(screen, GREEN, (50, 83, min(247, (200/p1.cool2 * min(p1.skill2,p1.cool2))), 5))
+    pygame.draw.rect(screen, GREEN, (WIDTH - 250, 83, min(247, (200/p2.cool2*min(p2.skill2,p2.cool2))), 5))
+    
+    pygame.display.flip()
 
 class Player():
     def __init__(self, char, player):
@@ -224,10 +415,12 @@ class Player():
             else:
                 self.setImg(4)
 
-        if self.char == 'hammer' and 600 - self.attackTime[5] <= self.skill2_timer <= 600 - self.attackTime[4] and self.skill2_timer % 10 == 0:
-            self.lightning[0] = random.random() * 400 + self.rect.center[0] - 200
-            if self.isHit(opponent,(-20,20),(-100,100),self.lightning.center):
-                opponent.damage(15) 
+        if self.char == 'hammer' and 600 - self.attackTime[5] < self.skill2_timer <= 600 - self.attackTime[4]:
+            self.setImg(6)
+            if self.skill2_timer % 10 == 0:
+                self.lightning[0] = random.random() * 400 + self.rect.center[0] - 200
+                if self.isHit(opponent,(-20,20),(-100,100),self.lightning.center):
+                    opponent.damage(15) 
 
     def attackHandler(self,opponent):
         if self.attack == 0: 
@@ -309,7 +502,7 @@ class Player():
                 elif self.char == 'shield':
                     self.absorb = 4
                 elif self.char == 'hammer':
-                    self.addStun(60)
+                    self.addStun(120)
                 elif self.char == 'spear':
                     self.cool = 5
 
@@ -348,121 +541,34 @@ class Player():
             self.jump -= 1 
     
 
-# Function to draw players and health bars
-def draw():
-    global p1,p2
-    screen.fill(WHITE)
 
-    # Draw players
-    screen.blit(p1.currentImg, (p1.rect.x - 30, p1.rect.y - 15))
-    screen.blit(p2.currentImg, (p2.rect.x - 30, p2.rect.y - 15))
-    if p1.char == 'shield' and 600 - p1.attackTime[5] <= p1.skill2_timer <= 600 - p1.attackTime[4]: screen.blit(p1.shieldImg, (p1.rect.x, p1.rect.y - 40))
-    if p2.char == 'shield' and 600 - p2.attackTime[5] <= p2.skill2_timer <= 600 - p2.attackTime[4]: screen.blit(p2.shieldImg, (p2.rect.x, p2.rect.y - 40))
-    if p1.char == 'hammer' and p1.attackTime[2] + 1 <= p1.skill1 <= p1.attackTime[3] and 0 < p1.hammer.x < 765: screen.blit(p1.hammerImg, (p1.hammer.x, p1.hammer.y))
-    if p2.char == 'hammer' and p2.attackTime[2] + 1 <= p2.skill1 <= p2.attackTime[3] and 0 < p2.hammer.x < 765: screen.blit(p2.hammerImg, (p2.hammer.x, p2.hammer.y))
-    if p1.char == 'hammer' and 600 - p1.attackTime[4] >= p1.skill2_timer >= 600 - p1.attackTime[5] and p1.lightning.x >= 0: screen.blit(p1.lightningImg, p1.lightning)
-    if p2.char == 'hammer' and 600 - p2.attackTime[4] >= p2.skill2_timer >= 600 - p2.attackTime[5] and p2.lightning.x >= 0: screen.blit(p2.lightningImg, p2.lightning)
-    if p1.char == 'spear' and 600 - p1.attackTime[5] <= p1.skill2_timer <= 600 - p1.attackTime[4]: screen.blit(p1.speedImg, (p1.rect.x, p1.rect.y - 45))
-    if p2.char == 'spear' and 600 - p2.attackTime[5] <= p2.skill2_timer <= 600 - p2.attackTime[4]: screen.blit(p2.speedImg, (p2.rect.x, p2.rect.y - 45))
-
-    # Draw health bars
-    pygame.draw.rect(screen, BLACK, (45, 45, 210, 47))
-    pygame.draw.rect(screen, BLACK, (WIDTH - 255, 45, 210, 47))
-    pygame.draw.rect(screen, RED, (50, 50, 200/p1.maxHealth * p1.health, 20))
-    pygame.draw.rect(screen, RED, (WIDTH - 250, 50, 200/p2.maxHealth * p2.health, 20))
-    pygame.draw.rect(screen, BLUE, (50, 74, min(247, (200/p1.cool1*p1.skill1)), 5))
-    pygame.draw.rect(screen, BLUE, (WIDTH - 250, 74, min(247, (200/p2.cool1*p2.skill1)), 5))
-    pygame.draw.rect(screen, GREEN, (50, 83, min(247, (200/p1.cool2 * min(p1.skill2,p1.cool2))), 5))
-    pygame.draw.rect(screen, GREEN, (WIDTH - 250, 83, min(247, (200/p2.cool2*min(p2.skill2,p2.cool2))), 5))
-    
-    pygame.display.flip()
-
-def selectChar():
-    # Select Character
-    global p1,p2
-    characters = ['fighter','shield','hammer','spear','fighter','fighter','fighter','fighter']
-
-    imgs = []
-
-    for i,char in enumerate(characters):
-        image = pygame.image.load(f"src/characters/{char}/{char}.png")
-        image = pygame.transform.scale(image, (100, 100))
-        imgs.append(image)
-
-    p1,p2 = 0,0
-    p1_delay = 0
-    p2_delay = 0
-    p1_selected = False
-    p2_selected = False
-
-    while True:
-        p1_delay -= 1
-        p2_delay -= 1
+running = True
+# Main game loop
+while running:
+    menu()
+    if not running: break
+    selectChar()
+    while running:
         clock.tick(FPS)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-                
-        
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_a] and p1 > 0 and p1_delay <= 0 and not p1_selected:
-            p1 -= 1
-            p1_delay = 10
-        elif keys[pygame.K_d] and p1 < len(imgs)-1 and p1_delay <= 0 and not p1_selected:
-            p1 += 1
-            p1_delay = 10
-        if keys[pygame.K_LEFT] and p2 > 0 and p2_delay <= 0 and not p2_selected:
-            p2 -= 1
-            p2_delay = 10
-        elif keys[pygame.K_RIGHT] and p2 < len(imgs)-1 and p2_delay <= 0 and not p2_selected:
-            p2 += 1
-            p2_delay = 10
-        if keys[pygame.K_e]:
-            p1_selected = True
-        if keys[pygame.K_SLASH]:
-            p2_selected = True
-        if keys[pygame.K_r]:
-            p1_selected = False
-        if keys[pygame.K_PERIOD]:
-            p2_selected = False
 
-        screen.fill(WHITE)
-        for i,img in enumerate(imgs):
-            screen.blit(img,(10 + 110 * i, 15))
-        pygame.draw.rect(screen, GREEN if p1_selected else BLUE, (10 + p1 * 110, 15, 100, 100), 4)
-        pygame.draw.rect(screen, GREEN if p2_selected else RED, (14 + p2 * 110, 19, 92, 92), 4)
+        p1.move()
+        p2.move()
+        p1.attackUpdate(p2)
+        p2.attackUpdate(p1)
+        p1.update()
+        p2.update()
+        draw()
 
-        pygame.display.flip()
-
-        if p1_selected and p2_selected:
-            break
-    p1 = Player(characters[p1],1)
-    p2 = Player(characters[p2],2)
-
-selectChar()
-# Main game loop
-running = True
-while running:
-    clock.tick(FPS)
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+        if p1.health <= 0 or p2.health <= 0:
             running = False
-
-    draw()
-    p1.move()
-    p2.move()
-    p1.attackUpdate(p2)
-    p2.attackUpdate(p1)
-    p1.update()
-    p2.update()
-
-    if p1.health <= 0 or p2.health <= 0:
-        running = False
-        winnerText = textFont.render(f"Player {'1' if p1.health > p2.health else '2' if p2.health > p1.health else '1,2'} Wins!", True, BLUE if p1.health >= p2.health else RED)
-        screen.blit(winnerText, (270,120))
-        pygame.display.flip()
-        time.sleep(10)
+            winnerText = textFont.render(f"Player {'1' if p1.health > p2.health else '2' if p2.health > p1.health else '1,2'} Wins!", True, BLUE if p1.health >= p2.health else RED)
+            screen.blit(winnerText, (270,120))
+            pygame.display.flip()
+            time.sleep(3)
+    running = True
 
 pygame.quit()
