@@ -108,7 +108,7 @@ def selectChar():
     # Select Character
     global p1,p2, running, background_image
     font = pygame.font.SysFont("malgungothic", 20)
-    characters = ['fighter','shield','hammer','spear','sword','fighter','fighter','fighter','fighter','fighter','fighter','fighter']
+    characters = ['fighter','shield','hammer','spear','sword','rock','rock','rock','rock','rock','rock','rock']
 
     imgs = []
 
@@ -276,6 +276,7 @@ class Player():
     def __init__(self, char, player):
         if char == 'fighter':
             self.char = 'fighter'
+            self.imgNum = 5
             self.maxHealth = 100
             self.speed = 5
             self.jumpPower = 15
@@ -285,12 +286,12 @@ class Player():
             self.knockbackPower = 10
             self.attackX = [25,45]
             self.attackY = [0,20]
-            self.attackTime = [1,4]
+            self.attackTime = [4]
             self.dmg1 = 8
             self.cool1 = 200
             self.attackX1 = [20,40]
             self.attackY1 = [-20,20]
-            self.attackTime1 = [1,6]
+            self.attackTime1 = [6]
             self.dmg2 = 20
             self.cool2 = 200
             self.attackX2 = [10,45]
@@ -298,6 +299,7 @@ class Player():
             self.attackTime2 = [20, 25]
         elif char == 'shield':
             self.char = 'shield'
+            self.imgNum = 5
             self.maxHealth = 100
             self.speed = 5
             self.jumpPower = 15
@@ -307,7 +309,7 @@ class Player():
             self.knockbackPower = 10
             self.attackX = [20,35]
             self.attackY = [-5,20]
-            self.attackTime = [1,6]
+            self.attackTime = [6]
             self.dmg1 = 10
             self.cool1 = 300
             self.attackX1 = [-60,60]
@@ -320,6 +322,7 @@ class Player():
             self.attackTime2 = [30, 330]
         elif char == 'hammer':
             self.char = 'hammer'
+            self.imgNum = 7
             self.maxHealth = 100
             self.speed = 3
             self.jumpPower = 15
@@ -342,6 +345,7 @@ class Player():
             self.attackTime2 = [30, 150]
         elif char == 'spear':
             self.char = 'spear'
+            self.imgNum = 4
             self.maxHealth = 100
             self.speed = 5
             self.jumpPower = 15
@@ -351,7 +355,7 @@ class Player():
             self.knockbackPower = 10
             self.attackX = [20,70]
             self.attackY = [0,15]
-            self.attackTime = [1,3]
+            self.attackTime = [3]
             self.cool1 = 100
             self.dmg1 = 3
             self.attackX1 = [10,210]
@@ -364,6 +368,7 @@ class Player():
             self.attackTime2 = [30, 330]
         elif char == 'sword':
             self.char = 'sword'
+            self.imgNum = 2
             self.maxHealth = 100
             self.speed = 6
             self.jumpPower = 15
@@ -371,25 +376,48 @@ class Player():
             self.dmg = 0.5
             self.cool = 40
             self.knockbackPower = 10
-            self.attackX = [30,45]
-            self.attackY = [-20,20]
-            self.attackTime = [10,20]
+            self.attackX = [40,60]
+            self.attackY = [-25,25]
+            self.attackTime = [0,10]
             self.cool1 = 100
             self.dmg1 = 0.5
-            self.attackX1 = [30,45]
-            self.attackY1 = [-20,20]
-            self.attackTime1 = [5,10,15,20,25,30]
+            self.attackX1 = [40,60]
+            self.attackY1 = [-25,25]
+            self.attackTime1 = [0,5,10,15,20,25,30]
             self.dmg2 = 20
             self.cool2 = 250
             self.attackX2 = [-800,800]
             self.attackY2 = [-300,300]
             self.attackTime2 = [10, 60]
+        elif char == 'rock':
+            self.char = 'rock'
+            self.imgNum = 1
+            self.maxHealth = 100
+            self.speed = 6
+            self.jumpPower = 15
+            self.absorb = 0
+            self.dmg = 5
+            self.cool = 12
+            self.knockbackPower = 10
+            self.attackX = []
+            self.attackY = []
+            self.attackTime = []
+            self.cool1 = 100
+            self.dmg1 = 0.5
+            self.attackX1 = []
+            self.attackY1 = []
+            self.attackTime1 = []
+            self.dmg2 = 20
+            self.cool2 = 10
+            self.attackX2 = []
+            self.attackY2 = []
+            self.attackTime2 = []
 
         self.rect = pygame.Rect(100 if player == 1 else 660, HEIGHT - PLAYER_HEIGHT + 30, 40, 40)
         self.player = player
         self.health = self.maxHealth
         self.face = 1 if player == 1 else -1
-        self.attack = self.cool
+        self.attack = max(1,self.cool-10)
         self.skill1 = self.cool1
         self.skill2 = 0
         self.skill2_timer = 0
@@ -400,7 +428,7 @@ class Player():
         self.skillImgs = []
 
         self.Imgs = [None] * 8
-        for i in range(7):
+        for i in range(self.imgNum):
             self.Imgs[i] = pygame.image.load(f"src/characters/{self.char}/{self.char}{i+1}.png")
             self.Imgs[i] = pygame.transform.scale(self.Imgs[i], (PLAYER_WIDTH, PLAYER_HEIGHT))
         self.currentImg = self.Imgs[0]
@@ -420,6 +448,18 @@ class Player():
             self.hammer = pygame.Rect(765,0,35,35)
             self.hammerFace = 1
             self.lightning = pygame.Rect(-1,100,40,200)
+        elif self.char == 'sword':
+            swordAttack = pygame.image.load("src/characters/sword/attack.png")
+            self.swordAttack = pygame.transform.scale(swordAttack, (5,50))
+            swordAttack2 = pygame.image.load("src/characters/sword/attack.png")
+            self.swordAttack2 = pygame.transform.scale(swordAttack2, (5,120))
+            self.swordAttack2 = pygame.transform.rotate(self.swordAttack2,90)
+        elif self.char == 'rock':
+            rockImg = pygame.image.load("src/characters/rock/rockImg.png")
+            self.rockImg = pygame.transform.scale(rockImg,(20,20))
+            self.rockCount = 0
+            self.rocks = []
+            
 
         self.hitSound = pygame.mixer.Sound('src/sound/punch1.mp3')
 
@@ -489,13 +529,13 @@ class Player():
                 self.skill2_timer = 600
 
     def hammerHandler(self,opponent):
-        if self.char == 'hammer' and self.attackTime1[0]+1 <= self.skill1 <= self.attackTime1[1] and self.skill1 % 3 == 0 and 0 < self.hammer.x < 765:
+        if self.attackTime1[0]+1 <= self.skill1 <= self.attackTime1[1] and self.skill1 % 3 == 0 and 0 < self.hammer.x < 765:
             self.hammerImg = pygame.transform.rotate(self.hammerImg,self.hammerFace * 90.0)
             self.hammer.x = min(self.hammer.x + self.hammerFace * 15, 765) if self.hammerFace == 1 else max(self.hammer.x + self.hammerFace * 15, 0)
             self.skillImgs.append([self.hammerImg,'xy',(self.hammer.x,self.hammer.y),3])
             if self.isHit(opponent,(-17,17),(-17,17),self.hammer.center):
                 opponent.damage(10)
-                self.skill2 += 30
+                self.skill2 += 20
                 self.hammer.x = 765
                 self.setImg(0)
                 self.skill1 = self.cool1
@@ -505,7 +545,7 @@ class Player():
             else:
                 self.setImg(4)
 
-        if self.char == 'hammer' and 600 - self.attackTime2[1] < self.skill2_timer <= 600 - self.attackTime2[0]:
+        if 600 - self.attackTime2[1] < self.skill2_timer <= 600 - self.attackTime2[0]:
             self.setImg(6)
             if self.skill2_timer % 10 == 0:
                 self.lightning[0] = random.random() * 400 + self.rect.center[0] - 200
@@ -513,27 +553,54 @@ class Player():
                 if self.isHit(opponent,(-20,20),(-100,100),self.lightning.center):
                     opponent.damage(15)
 
+    def rockHandler(self,opponent):
+        for i in range(self.rockCount):
+            self.skillImgs.append([pygame.transform.scale(self.rockImg,(10,10)),'self',(10*(i%4)-15,-23-i//4*5),1])
+        delIdx = []
+        for i in range(len(self.rocks)):
+            self.skillImgs.append([self.rockImg,'xy',(self.rocks[i][0]-10,self.rocks[i][1]-10),1])
+            if self.rocks[i][1] >= 290:
+                self.rocks[i][1] = 290
+                if self.rocks[i][3] == 0:
+                    delIdx.append(i)
+                elif self.rect.colliderect((self.rocks[i][0] - 10, self.rocks[i][1] - 10,20,20)):
+                    delIdx.append(i)
+                    self.rockCount = min(8,self.rockCount + 1)
+            else:
+                self.rocks[i][0] = min(self.rocks[i][0] + 10, 790) if self.rocks[i][3] > 0 else max(self.rocks[i][0] - 10, 10) if self.rocks[i][3] < 0 else self.rocks[i][0]
+                self.rocks[i][1] -= self.rocks[i][2]
+                self.rocks[i][2] -= 1
+                print(self.rocks[i][4])
+                if self.isHit(opponent,(-10,10),(-10,10),(self.rocks[i][0],self.rocks[i][1])) and not self.rocks[i][4]:
+                    self.rocks[i][4] = True if self.rocks[i][2] >= 0 else 2
+                    opponent.damage(self.dmg)
+                    opponent.skill2 += 5
+                    self.skill2 += 10
+                elif self.rocks[i][3] == 0 and self.rocks[i][2] < 0 and self.rocks[i][2] != 2:
+                    self.rocks[i][4] = False
+
+                if self.rocks[i][3] == 0 and self.rocks[i][1] < 0:
+                    delIdx.append(i)
+        for i in delIdx[::-1]:
+            del self.rocks[i]
+
     def attackHandler(self,opponent):
         if self.char == 'fighter':
-            if self.attack == 0: 
+            if self.attack == 0:
                 self.setImg(1)
-            elif self.attack == self.attackTime[0]:
-                self.setImg(2)
                 if self.isHit(opponent,self.attackX,self.attackY):
                     opponent.damage(self.dmg)
                     self.skill2 += 10
-            elif self.attack == self.attackTime[1]:  
+            elif self.attack == self.attackTime[0]:  
                 self.setImg(0)
         
         elif self.char == 'shield':
             if self.attack == 0: 
                 self.setImg(1)
-            elif self.attack == self.attackTime[0]:
-                self.setImg(2)
                 if self.isHit(opponent,self.attackX,self.attackY):
                     opponent.damage(self.dmg)
                     self.skill2 += 10
-            elif self.attack == self.attackTime[1]: 
+            elif self.attack == self.attackTime[0]: 
                 self.setImg(0)
         
         elif self.char == 'hammer':
@@ -551,53 +618,48 @@ class Player():
         elif self.char == 'spear':
             if self.attack == 0: 
                 self.setImg(1)
-            elif self.attack == self.attackTime[0]:
-                self.setImg(2)
                 if self.isHit(opponent,self.attackX,self.attackY):
                     if 600 - self.attackTime2[0] <= self.skill2_timer or self.skill2_timer <= 600 - self.attackTime2[1]:
                         self.skill2 += 10
                     else:
                         opponent.skill2 -= 4
                     opponent.damage(self.dmg)
-            elif self.attack == self.attackTime[1]: 
+            elif self.attack == self.attackTime[0]: 
                 self.setImg(0)
 
         elif self.char == 'sword':
-            if self.attack == 0: 
-                self.setImg(1)
+            if self.attack in self.attackTime:
+                self.skillImgs.append([pygame.transform.rotate(self.swordAttack,-30 if self.attack == self.attackTime[0] else 30),'xy',(self.rect.x + self.face * random.randrange(48,52),self.rect.y - 5),8])
                 if self.isHit(opponent,self.attackX,self.attackY):
                     opponent.damage(self.dmg)
                     self.skill2 += 10
                     opponent.skill2 -= 2
-            elif self.attack == self.attackTime[0]:
-                self.setImg(2)
-                if self.isHit(opponent,self.attackX,self.attackY):
-                    opponent.damage(self.dmg)
-                    self.skill2 += 10
-                    opponent.skill2 -= 2
-            elif self.attack == self.attackTime[1]: 
-                self.setImg(0)
+
+        elif self.char == 'rock':
+            if self.attack == 0:
+                if self.rockCount > 0:
+                    self.rockCount -= 1
+                    self.rocks.append([self.rect.center[0] + self.face * 15, self.rect.center[1], 10, self.face, False])
+                else: self.attack = self.cool
 
     def skill1Handler(self,opponent):
         if self.char == 'fighter':
             if self.skill1 == 0: 
-                self.setImg(3)
-            elif self.skill1 == self.attackTime1[0]: 
-                self.setImg(4)
+                self.setImg(2)
                 if self.isHit(opponent,self.attackX1,self.attackY1):
                     if self.char == 'fighter':
                         self.addJump(10)
                         opponent.addJump(20)
                         opponent.damage(self.dmg1)
                         self.skill2 += 30
-            elif self.skill1 == self.attackTime1[1]:
+            elif self.skill1 == self.attackTime1[0]:
                 self.setImg(0)
 
         elif self.char == 'shield':
             if self.skill1 == 0: 
-                self.setImg(3)
+                self.setImg(2)
             elif self.skill1 == self.attackTime1[0]: 
-                self.setImg(4)
+                self.setImg(3)
                 if self.isHit(opponent,self.attackX1,self.attackY1):
                         opponent.addStun(30)
                         opponent.damage(self.dmg1)
@@ -620,9 +682,9 @@ class Player():
 
         elif self.char == 'spear':
             if self.skill1 == 0: 
-                self.setImg(3)
+                self.setImg(2)
             elif self.skill1 == self.attackTime1[0]: 
-                self.setImg(4)
+                self.setImg(1)
                 if self.isHit(opponent,self.attackX1,self.attackY1):
                     opponent.damage(self.dmg1)
                     self.skill2 += 30
@@ -632,27 +694,26 @@ class Player():
                 self.setImg(0)
                 
         elif self.char == 'sword':
-            if self.skill1 == 0: 
-                self.setImg(3)
-                if self.isHit(opponent,self.attackX1,self.attackY1):
-                    opponent.damage(self.dmg1)
-                    self.skill2 += 10
-                    opponent.skill2 -= 2
-            for i in range(0,6):
+            for i in range(7):
                 if self.skill1 == self.attackTime1[i]:
-                    self.setImg(3 if i%2 == 1 else 4)
+                    self.skillImgs.append([pygame.transform.rotate(self.swordAttack,-30 if i % 2 == 0 else 30),'xy',(self.rect.x + self.face * random.randrange(48,52),self.rect.y - 5),8])
                     if self.isHit(opponent,self.attackX1,self.attackY1):
                         opponent.damage(self.dmg1)
                         self.skill2 += 10
-                        opponent.skill2 -= 2
-                    if i == 5:
-                        self.setImg(0)    
+                        opponent.skill2 -= 2 
+
+        elif self.char == 'rock':
+            if self.skill1 == 0:
+                if self.rockCount < 8:
+                    self.rockCount += 1
+                else:
+                    self.skill1 = self.cool1
 
 
     def skill2Handler(self,opponent):
         if self.char == 'fighter':
             if self.skill2_timer == 600:
-                self.setImg(5)
+                self.setImg(3)
                 if self.isHit(opponent,self.attackX2,self.attackY2):
                     self.addStun(25)
                     opponent.addStun(120)
@@ -660,7 +721,7 @@ class Player():
                     opponent.rect.y = self.rect.y - 10
                     opponent.damage(1)
             elif self.skill2_timer == 600 - self.attackTime2[0]:
-                self.setImg(6)
+                self.setImg(4)
                 if self.isHit(opponent,self.attackX2,self.attackY2):
                     opponent.rect.x = WIDTH - 40 if self.face == 1 else 0
                     opponent.damage(self.dmg2)
@@ -669,14 +730,13 @@ class Player():
         
         elif self.char == 'shield':
             if self.skill2_timer == 600:
-                self.setImg(5)
+                self.setImg(4)
                 self.addStun(30)
             elif self.skill2_timer == 600 - self.attackTime2[0]:
-                self.setImg(6)
+                self.setImg(0)
                 self.absorb = 4
                 self.skillImgs.append([self.shieldImg,'self',(0,-40), self.attackTime2[1] - self.attackTime2[0]])
             elif self.skill2_timer == 600 - self.attackTime2[1]:
-                self.setImg(0)
                 self.absorb = 1
 
         elif self.char == 'hammer':
@@ -691,26 +751,34 @@ class Player():
 
         elif self.char == 'spear':
             if self.skill2_timer == 600:
-                self.setImg(5)
+                self.setImg(3)
                 self.addStun(30)
             elif self.skill2_timer == 600 - self.attackTime2[0]:
-                self.setImg(6)
+                self.setImg(0)
                 self.cool = 5
                 self.skillImgs.append([self.speedImg,'self',(0,-40), self.attackTime2[1] - self.attackTime2[0]])
             elif self.skill2_timer == 600 - self.attackTime2[1]:
-                self.setImg(0)
                 self.cool = 20
         
         elif self.char == 'sword':
             if self.skill2_timer == 600:
-                self.setImg(5)
+                self.setImg(1)
                 self.addStun(100)
             elif self.skill2_timer == 600 - self.attackTime2[0]:
-                self.setImg(6)
-            elif self.skill2_timer == 600 - self.attackTime2[1]:
                 self.setImg(0)
-                self.skillImgs.append([(0, 0, 160, 2),'opponent',WHITE,3])
+            elif self.skill2_timer == 600 - self.attackTime2[1]:
+                self.skillImgs.append([self.swordAttack2,'opponent',(0,0),4])
                 opponent.damage(self.dmg2 + opponent.absorb)
+
+        elif self.char == 'rock':
+            if self.skill2_timer == 600:
+                for i in range(len(self.rocks)):
+                    if self.rocks[i][1] >= 290:
+                        self.rocks[i][3] = 0
+                        self.rocks[i][1] -= 10
+                        self.rocks[i][4] = False
+                        self.rocks[i][2] = 20
+                    
 
     def attackUpdate(self,opponent):
         if self.attack < self.cool:
@@ -722,7 +790,10 @@ class Player():
         if self.skill2_timer > 0:
             self.skill2Handler(opponent)
 
-        self.hammerHandler(opponent)
+        if self.char == 'hammer':
+            self.hammerHandler(opponent)
+        elif self.char == 'rock':
+            self.rockHandler(opponent)
 
     def update(self):
         if self.stun > 0: self.stun -= 1
