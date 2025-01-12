@@ -570,7 +570,6 @@ class Player():
                 self.rocks[i][0] = min(self.rocks[i][0] + 10, 790) if self.rocks[i][3] > 0 else max(self.rocks[i][0] - 10, 10) if self.rocks[i][3] < 0 else self.rocks[i][0]
                 self.rocks[i][1] -= self.rocks[i][2]
                 self.rocks[i][2] -= 1
-                print(self.rocks[i][4])
                 if self.isHit(opponent,(-10,10),(-10,10),(self.rocks[i][0],self.rocks[i][1])) and not self.rocks[i][4]:
                     self.rocks[i][4] = True if self.rocks[i][2] >= 0 else 2
                     opponent.damage(self.dmg)
